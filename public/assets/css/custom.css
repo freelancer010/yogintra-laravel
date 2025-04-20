@@ -1,0 +1,105 @@
+.dataTables_filter label {
+    display: flex;
+}
+
+input.form-control.form-control-sm {
+    margin-left: 12px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.show {
+    display: block;
+}
+
+.overlay i {
+    animation: mymove 5s infinite;
+}
+
+@keyframes mymove {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@media (min-width: 768px) {
+
+    .main-sidebar,
+    .main-sidebar::before {
+        transition: margin-left .3s ease-in-out, width .3s ease-in-out;
+        width: 15%;
+    }
+
+    body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .content-wrapper,
+    body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-footer,
+    body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-header {
+        transition: margin-left .3s ease-in-out;
+        margin-left: 15%;
+    }
+}
+
+.sidebar-mini .main-sidebar .nav-link,
+.sidebar-mini-md .main-sidebar .nav-link,
+.sidebar-mini-xs .main-sidebar .nav-link {
+    width: 100% !important;
+    transition: width ease-in-out .3s;
+}
+
+.table td,
+.table th {
+    padding: 4px 2px;
+    vertical-align: inherit;
+    border-top: 1px solid #dee2e6;
+    /* width: 8% !important; */
+    text-align: center !important;
+    font-size: 14px;
+}
+
+.user-panel {
+    position: relative !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    text-align: center !important;
+}
+
+body,
+.sidebar a {
+    color: #434C66 !important;
+}
+
+.navbar-white {
+    background-color: #ffffff !important;
+    color: #1f2d3d;
+}
+
+.user-panel {
+    border-bottom: 0 !important;
+}
+
+.card {
+    background-color: #ffffff !important;
+}
+
+.table td,
+.table th {
+    text-align: left !important;
+}
+
+.sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active,
+.sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active,
+.btn-primary:hover,
+.btn-primary,
+.page-item.active .page-link {
+    background-color: #01aeb7 !important;
+    color: #FEEEEF !important;
+}
+
+table a {
+    color: #01aeb7 !important;
+}
+
+.user-panel img {
+    width: 3.5rem !important;
+}
