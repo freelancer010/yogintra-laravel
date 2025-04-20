@@ -84,15 +84,17 @@ Route::get('/yoga-bookings', function () {
 
 Route::post('/yoga-bookings/view', [YogaController::class, 'getYoga'])->name('getYoga');
 
-
-// Yoga Center
-// Route::get('/yoga-bookings', [YogaController::class, 'index'])->name('yoga.bookings');
-
 // Accounts
 Route::get('/ledger', [AccountController::class, 'ledger'])->name('ledger');
+Route::post('/ledger', [AccountController::class, 'ledger'])->name('ledger');
 Route::get('/summary', [AccountController::class, 'summary'])->name('summary');
-Route::get('/expenses', [AccountController::class, 'expenses'])->name('expenses');
+Route::post('/summary', [AccountController::class, 'summary'])->name('summary');
+Route::get('/office-expences', [AccountController::class, 'expenses'])->name('office-expences');
+Route::post('/office-expences', [AccountController::class, 'expenses'])->name('office-expences');
+Route::post('/office-expences/add', [AccountController::class, 'addExpenses'])->name('office-expences/add');
 
 // Users
 Route::get('/admin/view', [AdminController::class, 'index'])->name('admin.view');
-Route::get('/admin/add', [AdminController::class, 'create'])->name('admin.add');
+Route::get('/admin/add', [AdminController::class, 'add'])->name('admin.add');
+Route::post('/admin/add', [AdminController::class, 'add'])->name('admin.add');
+Route::get('/admin/list_data', [AdminController::class, 'listData'])->name('admin.listData');

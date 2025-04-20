@@ -1,17 +1,17 @@
-<?php
-$this->load->view('includes/header');
-?>
+@extends('layouts.layout')
+
+@section('content')
 <div class="content-wrapper">
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Expense</h1>
+                    <h1>Ledger</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item">Home</li>
-                        <li class="breadcrumb-item active">Expense</li>
+                        <li class="breadcrumb-item active">Ledger</li>
                     </ol>
                 </div>
             </div>
@@ -24,10 +24,7 @@ $this->load->view('includes/header');
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header yogintra align-items-center d-flex justify-content-between">
-                            <a href="<?= PANELURL ?>office-expences/add" class="btn btn-sm btn-primary">
-                                <i class="fas fa-plus"></i>&nbsp;&nbsp;Add Expenses
-                            </a>
-                            <div class="row align-items-center" style="margin-bottom:-2px">
+                            <div class="row align-items-center ml-auto" style="margin-bottom:-2px">
                                 <div class="filter d-flex justify-content-center align-items-center">
                                     <div class="d-flex mr-1 align-items-center">
                                         <button type="button" class="btn btn-sm btn-success mr-3 " onclick=filter()>
@@ -37,25 +34,39 @@ $this->load->view('includes/header');
                                     </div>
                                     <div class="d-flex mr-1 align-items-center">
                                         <!-- <label for="fromDate" class="exampleInputEmail1 mr-1 text-muted ">From</label> -->
-                                        <input style="height: 32px;" type="date" class="form-control mr-3" id="fromDate" max="<?php echo date('Y-m-d'); ?>">
+                                        <input style="height: 32px;" type="date" class="form-control mr-3" id="fromDate"
+                                            max="<?php echo date('Y-m-d'); ?>">
                                     </div>
                                     <div class="d-flex align-items-center">
                                         <label for="toDate" class="exampleInputEmail1 mt-1 mr-3 text-muted">To</label>
-                                        <input style="height: 32px;" type="date" class="form-control mr-1" id="toDate" max="<?php echo date('Y-m-d'); ?>">
+                                        <input style="height: 32px;" type="date" class="form-control mr-1" id="toDate"
+                                            max="<?php echo date('Y-m-d'); ?>">
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="card-body">
+                            <select id="class_type" name="class" class="form-control editInputBox col-lg-4 m-auto">
+                                <option value='' selected>Select Your Class type</option>
+
+                                <option value="Home Visit Yoga">Home Visit Yoga</option>
+                                <option value="Private Online Yoga">Private Online Yoga</option>
+                                <option value="Group Online Yoga">Group Online Yoga</option>
+                                <option value="Corporate Yoga">Corporate Yoga</option>
+                                <option value="Retreat">Retreat</option>
+                                <option value="Workshop">Workshop</option>
+                                <option value="TTC">TTC</option>
+                                <option value="Yoga Center">Yoga Center</option>
+                            </select>
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th style="width:16% !important">Payee Name</th>
-                                        <th style="width:16% !important">Expense Type</th>
-                                        <th style="width:16% !important">Expense Amount</th>
-                                        <th style="width:15% !important">Date</th>
-                                        <th style="font-style:italic;width:25% !important">Note</th>
-                                        <th style="width:5% !important">Action</th>
+                                        <th>Client Name</th>
+                                        <th>Income</th>
+                                        <th style="width:180px !important;">Date</th>
+                                        <th>Trainer Name</th>
+                                        <th>Expenses</th>
+                                        <th style="width:180px !important;">Date</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -66,10 +77,18 @@ $this->load->view('includes/header');
         </div>
     </section>
 </div>
-<?php
-$this->load->view('includes/footer');
-?>
+@endsection
+
+@section('scripts')
 <script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    const PANELURL = "{{ url('/') }}/";
+
     let filter = () => {
         let toDate = $("#toDate").val();
         let fromDate = $("#fromDate").val();
@@ -83,52 +102,41 @@ $this->load->view('includes/footer');
     }
 
     let getData = (class_type = 'all', startDate = '', endDate = '') => {
-        var apiUrl = PANELURL + 'office-expences';
+        var apiUrl = PANELURL + 'ledger';
         ajaxCallData(apiUrl, {
                 'class_type': class_type,
                 startDate: startDate,
                 endDate: endDate
             }, 'POST')
-            .then(function(result) {
-                resp = JSON.parse(result);
+            .then(function(resp) {
                 if (resp.success == 1) {
                     response = resp.data;
                     let cols = [{
-                            data: "payee"
+                            data: "name"
                         },
                         {
-                            data: "expenseType"
-                        },
-                        {
-                            data: "expenseAmount"
+                            data: "full_payment"
                         },
                         {
                             data: null,
                             render: function(data, type, row) {
-                                return `<div style="font-style:italic;"> ${(row.created_date).slice(0,10)}</div>`;
+                                return (row.created_date != '' && row.created_date != undefined) ? row.created_date.slice(0, 10) : '';
                             }
                         },
                         {
-                            data: null,
-                            render: function(data, type, row) {
-                                return `<div style="font-style:italic;"> ${row.note}</div>`;
-                            }
+                            data: "trainerName"
+                        },
+                        {
+                            data: "payTotrainer"
                         },
                         {
                             data: null,
                             render: function(data, type, row) {
-                                return `<div class="d-flex justify-content-between p-1">
-                                            <a href="office-expences/edit/${row.id}" title="edit" class="btn btn-warning btn-xs mr5">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                            <a href="#" title="Delete" onclick="deleteExpense(${row.id})" class="btn btn-danger btn-xs">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
-                                    </div class="d-flex">`;
+                                return (row.trainerPayDate != '' && row.trainerPayDate != undefined) ? row.trainerPayDate.slice(0, 10) : '';
                             }
                         }
                     ]
-                    createDataTable("example1", response, cols, 3);
+                    createDataTable("example1", response, cols, 2);
                 } else {
                     createDataTable("example1", '', '');
                 }
@@ -138,20 +146,9 @@ $this->load->view('includes/footer');
             });
     };
     getData();
-</script>
-<script>
-    function deleteExpense(e) {
 
-        $.ajax({
-            type: "GET",
-            url: PANELURL + 'office-expences/delete/' + e,
-            success: function(data) {
-                if (data == 1) {
-                    location.reload();
-                    notifyAlert('Data Successfully Deleted', 'success');
-                }
-
-            }
-        });
-    }
+    $('select').on('change', function() {
+        getData(this.value);
+    });
 </script>
+@endsection

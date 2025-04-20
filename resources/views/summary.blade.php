@@ -1,6 +1,6 @@
-<?php
-$this->load->view('includes/header');
-?>
+@extends('layouts.layout')
+
+@section('content')
 <div class="content-wrapper">
     <section class="content-header">
         <div class="container-fluid">
@@ -71,11 +71,17 @@ $this->load->view('includes/header');
         </div>
     </section>
 </div>
-<?php
-$this->load->view('includes/footer');
-?>
-<script>
+@endsection
 
+@section('scripts')
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    const PANELURL = "{{ url('/') }}/";
     let filter = () => {
         let toDate = $("#toDate").val();
         let fromDate = $("#fromDate").val();
@@ -90,18 +96,26 @@ $this->load->view('includes/footer');
 
     let getData = (class_type = 'all', startDate = '', endDate = '') => {
         var apiUrl = PANELURL + 'summary';
-        ajaxCallData(apiUrl, { 'class_type': class_type, startDate: startDate, endDate: endDate }, 'POST')
-            .then(function (result) {
-                resp = JSON.parse(result);
+        ajaxCallData(apiUrl, {
+                'class_type': class_type,
+                startDate: startDate,
+                endDate: endDate
+            }, 'POST')
+            .then(function(resp) {
                 if (resp.success == 1) {
                     response = resp.data;
-                    let cols = [
-                        { data: "class_type" },
-                        { data: "full_payment" },
-                        { data: "payTotrainer" },
+                    let cols = [{
+                            data: "class_type"
+                        },
+                        {
+                            data: "full_payment"
+                        },
+                        {
+                            data: "payTotrainer"
+                        },
                         {
                             data: null,
-                            render: function (data, type, row) {
+                            render: function(data, type, row) {
                                 var profit = parseInt(row.full_payment - row.payTotrainer)
                                 return `${profit > 0 ? profit : 0}`;
                             }
@@ -117,9 +131,10 @@ $this->load->view('includes/footer');
                 $('td').css('text-align', 'center');
                 $('.buttons-pdf, .buttons-csv').css('height', '33px');
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 console.log(err);
             });
     };
     getData();
 </script>
+@endsection

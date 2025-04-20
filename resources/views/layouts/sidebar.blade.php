@@ -181,7 +181,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('expenses') }}" class="nav-link">
+                            <a href="{{ route('office-expences') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Expenses</p>
                             </a>
