@@ -83,6 +83,8 @@ Route::get('/yoga-bookings', function () {
 })->name('yoga-bookings');
 
 Route::post('/yoga-bookings/view', [YogaController::class, 'getYoga'])->name('getYoga');
+Route::match(['get', 'post'], '/yoga-bookings/add', [YogaController::class, 'addEvents'])->name('yoga-bookings.add');
+// Route::match(['get', 'post'], '/yoga-bookings/edit/{id}', [AuthController::class, 'addEvents'])->name('login');
 
 // Accounts
 Route::get('/ledger', [AccountController::class, 'ledger'])->name('ledger');

@@ -54,24 +54,25 @@ class YogaController extends Controller
                 'client_name'     => $request->input('name'),
                 'client_number'   => $request->input('number'),
                 'email'           => $request->input('email'),
-                'country'         => $request->input('country'),
-                'state'           => $request->input('state'),
-                'city'            => $request->input('city'),
+                'country'         => $request->input('country') ?? '',
+                'state'           => $request->input('state') ?? '',
+                'city'            => $request->input('city') ?? '',
                 'class_type'      => $request->input('class_type'),
                 'event_name'      => $request->input('eventName'),
                 'created_date'    => $request->input('date') ?? now(),
-                'created_by'      => Session::get('username'),
+                'created_by'      => Session::get('username') ?? '',
                 's_date'          => $request->input('date') ?? $request->input('start_date'),
                 'e_date'          => $request->input('date') ?? $request->input('end_date'),
                 'package'         => $request->input('package'),
                 'payment_type'    => $request->input('payment_type'),
+                'lead_transfer_id' => $request->input('lead_transfer_id') ?? 0,
             ];
 
             if ($request->input('payment_type') === 'Full Payment') {
-                $data['totalPayAmount'] = $request->input('totalPayAmount');
+                $data['totalPayAmount'] = $request->input('totalPayAmount') ?? 0;
                 $data['totalPayDate'] = $request->input('totalPayDate');
             } elseif ($request->input('payment_type') === 'Partition Payment') {
-                $data['totalPayAmount'] = array_sum($request->input('fullPayment', []));
+                $data['totalPayAmount'] = array_sum($request->input('fullPayment', [])) ?? 0;
                 $data['totalPayDate'] = $request->input('fullPaymentDate')[0] ?? null;
             }
 
