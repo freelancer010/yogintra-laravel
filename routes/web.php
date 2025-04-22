@@ -98,3 +98,7 @@ Route::get('/admin/view', [AdminController::class, 'index'])->name('admin.view')
 Route::get('/admin/add', [AdminController::class, 'add'])->name('admin.add');
 Route::post('/admin/add', [AdminController::class, 'add'])->name('admin.add');
 Route::get('/admin/list_data', [AdminController::class, 'listData'])->name('admin.listData');
+Route::post('/admin/change_status', [AdminController::class, 'changeStatus'])->name('admin.changeStatus');
+Route::get('/admin/delete/{id}', [AdminController::class, 'delete'])->name('admin.delete');
+Route::get('/admin/edit/{id}', [AdminController::class, 'edit'])->name('admin.edit');
+Route::post('/admin/edit/{id}', [AdminController::class, 'edit'])->name('admin.edit');

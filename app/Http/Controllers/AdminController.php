@@ -67,7 +67,7 @@ class AdminController extends Controller
 
     public function changeStatus(Request $request)
     {
-        DB::table('admin')
+        DB::table('ci_admin')
             ->where('admin_id', $request->id)
             ->update(['is_active' => $request->status]);
     }
@@ -110,8 +110,9 @@ class AdminController extends Controller
 
             if ($request->hasFile('profileImage')) {
                 $file = $request->file('profileImage');
-                $path = $file->storeAs('uploads', time() . '_' . $file->getClientOriginalName(), 'public');
-                $insert['profile_image'] = 'storage/' . $path;
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('uploads'), $filename); // Save in public/uploads
+                $insert['profile_image'] = 'uploads/' . $filename; // For use with asset()
             }
 
             DB::table('ci_admin')->insert($insert);
@@ -126,7 +127,7 @@ class AdminController extends Controller
     public function edit(Request $request, $id = null)
     {
 
-        $data['admin_roles'] = DB::table('admin_roles')->get();
+        $data['admin_roles'] = DB::table('ci_admin_roles')->get();
 
         if ($request->isMethod('post')) {
             $validator = Validator::make($request->all(), [
@@ -160,18 +161,19 @@ class AdminController extends Controller
 
             if ($request->hasFile('profileImage')) {
                 $file = $request->file('profileImage');
-                $path = $file->storeAs('uploads', time() . '_' . $file->getClientOriginalName(), 'public');
-                $update['profile_image'] = 'storage/' . $path;
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('uploads'), $filename); // Save in public/uploads
+                $update['profile_image'] = 'uploads/' . $filename; // For use with asset()
             }
 
-            DB::table('admin')->where('admin_id', $id)->update($update);
+            DB::table('ci_admin')->where('admin_id', $id)->update($update);
 
             Session::flash('success', 'Admin has been updated successfully!');
-            return redirect()->route('admin.index');
+            return redirect()->route('admin.view');
         } elseif (!$id) {
-            return redirect()->route('admin.index');
+            return redirect()->route('admin.view');
         } else {
-            $data['admin'] = DB::table('admin')->where('admin_id', $id)->first();
+            $data['admin'] = DB::table('ci_admin')->where('admin_id', $id)->first();
 
             return view('admin.edit', $data);
         }
@@ -179,7 +181,7 @@ class AdminController extends Controller
 
     public function checkUsername(Request $request, $id = 0)
     {
-        $exists = DB::table('admin')
+        $exists = DB::table('ci_admin')
             ->where('username', $request->username)
             ->where('admin_id', '!=', $id)
             ->exists();
@@ -190,9 +192,9 @@ class AdminController extends Controller
     public function delete($id)
     {
 
-        DB::table('admin')->where('admin_id', $id)->delete();
+        DB::table('ci_admin')->where('admin_id', $id)->delete();
 
         Session::flash('success', 'User has been Deleted Successfully.');
-        return redirect()->route('admin.index');
+        return redirect()->route('admin.view');
     }
 }
