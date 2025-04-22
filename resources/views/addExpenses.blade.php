@@ -1,14 +1,15 @@
-<?php
-$this->load->view('includes/header');
-?>
+@extends('layouts.layout')
+
+@section('content')
 <style>
-    #note{
-        height:20vh;
+    #note {
+        height: 20vh;
     }
-    #note::placeholder{
+
+    #note::placeholder {
         position: absolute;
-        top:10px;
-        left:10px;
+        top: 10px;
+        left: 10px;
     }
 </style>
 <!-- Content Wrapper. Contains page content -->
@@ -82,26 +83,34 @@ $this->load->view('includes/header');
 </div>
 </section>
 </div>
-<?php
-$this->load->view('includes/footer');
-?>
+@endsection
+
+@section('scripts')
 <script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    const PANELURL = "{{ url('/') }}/";
+
     let addLead = () => {
-        if($('#expenseAmount').val() != '' && $('#note').val() != '' && $('#expenseDate').val() != '' && $('#expenseType').val() != ''){
+        if ($('#expenseAmount').val() != '' && $('#note').val() != '' && $('#expenseDate').val() != '' && $('#expenseType').val() != '') {
             ajaxCallData(PANELURL + 'office-expences/add', $("#addLeads").serialize(), 'POST')
-                .then(function (result) {
-                    response = JSON.parse(result);
+                .then(function(response) {
                     if (response.success == 1) {
                         $('#addLeads')[0].reset();
-                        notifyAlert('Data Added Successfully', 'success',);
-                        window.location.href = PANELURL+'office-expences';
+                        notifyAlert('Data Added Successfully', 'success', );
+                        window.location.href = PANELURL + 'office-expences';
                     }
                 })
-                .catch(function (err) {
+                .catch(function(err) {
                     console.log(err);
                 });
-        }else{
+        } else {
             notifyAlert('Expenses cannot be empty', 'danger');
         }
     }
 </script>
+@endsection

@@ -91,7 +91,11 @@ Route::get('/summary', [AccountController::class, 'summary'])->name('summary');
 Route::post('/summary', [AccountController::class, 'summary'])->name('summary');
 Route::get('/office-expences', [AccountController::class, 'expenses'])->name('office-expences');
 Route::post('/office-expences', [AccountController::class, 'expenses'])->name('office-expences');
+Route::get('/office-expences/add', [AccountController::class, 'addExpenses'])->name('office-expences/add');
 Route::post('/office-expences/add', [AccountController::class, 'addExpenses'])->name('office-expences/add');
+Route::get('/office-expences/edit/{id}', [AccountController::class, 'editExpenses'])->name('office-expences/edit');
+Route::post('/office-expences/edit/{id}', [AccountController::class, 'editExpenses'])->name('office-expences/edit');
+Route::get('/office-expences/delete/{id}', [AccountController::class, 'deleteExpenses'])->name('office-expences.delete');
 
 // Users
 Route::get('/admin/view', [AdminController::class, 'index'])->name('admin.view');
