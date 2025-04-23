@@ -118,7 +118,7 @@
                         {
                             data: null,
                             render: function(data, type, row) {
-                                return `<a href="${PANELURL}yoga-bookings/view?id=${row.id}">${row.client_name}</a>`;
+                                return `<a href="${PANELURL}yoga-bookings/profile/${row.id}">${row.client_name}</a>`;
                             }
                         },
                         {
@@ -150,7 +150,7 @@
                                             </button>`;
                                 @endif
 
-                                buttons += `<a href="{{ url('edit-events') }}?id=${row.id}" title="Edit" class="btn btn-warning btn-xs mr-1">
+                                buttons += `<a href="{{ url('yoga-bookings/edit') }}?id=${row.id}" title="Edit" class="btn btn-warning btn-xs mr-1">
                                             <i class="fa fa-edit"></i>
                                         </a>`;
                                 buttons += `<a target="_blank" href="{{ url('invoice/event') }}?id=${row.id}" title="Download Invoice" class="btn btn-secondary btn-xs">
@@ -213,20 +213,13 @@
             'id': id,
         }
         ajaxCallData(PANELURL + 'yoga-bookings/delete', postData, 'POST')
-            .then(function(result) {
-                jsonCheck = isJSON(result);
-                if (jsonCheck == true) {
-                    resp = JSON.parse(result);
-                    if (resp.success == 1) {
-                        getData();
-                        notifyAlert('Deleted successfully!', 'success');
-                    } else {
-                        notifyAlert('You are not authorized!', 'danger');
-                    }
+            .then(function(resp) {
+                if (resp.success == 1) {
+                    getData();
+                    notifyAlert('Deleted successfully!', 'success');
                 } else {
                     notifyAlert('You are not authorized!', 'danger');
                 }
-
             })
             .catch(function(err) {
                 console.log(err);

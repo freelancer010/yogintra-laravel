@@ -121,7 +121,7 @@ class YogaController extends Controller
         return view('addYoga');
     }
 
-    public function getBookingProfile(Request $request)
+    public function getBookingProfile(Request $request, $id = null)
     {
         if ($request->filled('bookingId')) {
             $id = $request->input('bookingId');
@@ -136,7 +136,7 @@ class YogaController extends Controller
                     'data'          => $booking,
                     'renew_details' => DB::table('package_renew_detail')->where([
                         'lead_id' => $id,
-                        'type'    => 'yoga',
+                        // 'type'    => 'yoga',
                     ])->get(),
                 ]);
             }
@@ -166,7 +166,7 @@ class YogaController extends Controller
         if ($deleted) {
             return response()->json([
                 'success' => 1,
-                'message' => 'Event deleted Successfully'
+                'message' => 'Yoga deleted Successfully'
             ]);
         }
 

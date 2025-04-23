@@ -17,7 +17,7 @@ use App\Http\Controllers\UserController;
 
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
-Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/access_denied/index/{back?}', function ($back = null) {
     return view('errors.access_denied', ['back' => $back]);
@@ -84,7 +84,10 @@ Route::get('/yoga-bookings', function () {
 
 Route::post('/yoga-bookings/view', [YogaController::class, 'getYoga'])->name('getYoga');
 Route::match(['get', 'post'], '/yoga-bookings/add', [YogaController::class, 'addEvents'])->name('yoga-bookings.add');
-// Route::match(['get', 'post'], '/yoga-bookings/edit/{id}', [AuthController::class, 'addEvents'])->name('login');
+Route::get('/yoga-bookings/edit', [YogaController::class, 'editEvents'])->name('yoga-bookings.edit');
+Route::post('/yoga-bookings/profile', [YogaController::class, 'getBookingProfile'])->name('getBookingProfile');
+Route::get('/yoga-bookings/profile/{id}', [YogaController::class, 'getBookingProfile']);
+Route::post('/yoga-bookings/delete', [YogaController::class, 'deleteData']);
 
 // Accounts
 Route::get('/ledger', [AccountController::class, 'ledger'])->name('ledger');
