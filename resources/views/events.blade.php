@@ -24,7 +24,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header yogintra align-items-center d-flex justify-content-between">
-                            <a href="{{ url('add-events') }}" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add Events</a>
+                            <a href="{{ url('event/add') }}" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add Events</a>
                             <a href="#" onclick="filterDue()" class="btn btn-sm btn-secondary ml-auto">&nbsp;&nbsp;Due Customers</a>
                             <div class="row align-items-center ml-auto" style="margin-bottom:-2px">
                                 <div class="filter d-flex justify-content-center align-items-center">
@@ -111,7 +111,7 @@
                         {
                             data: null,
                             render: function(data, type, row) {
-                                return `<a href="${PANELURL}booking-profile?bookingId=${row.id}">${row.client_name}</a>`;
+                                return `<a href="${PANELURL}event/profile/${row.id}">${row.client_name}</a>`;
                             }
                         },
                         {
@@ -140,7 +140,7 @@
                                             </button>`;
                                 @endif
 
-                                buttons += `<a href="{{ url('edit-events') }}?id=${row.id}" title="Edit" class="btn btn-warning btn-xs mr-1">
+                                buttons += `<a href="{{ url('event/edit') }}?id=${row.id}" title="Edit" class="btn btn-warning btn-xs mr-1">
                                             <i class="fa fa-edit"></i>
                                         </a>`;
                                 buttons += `<a target="_blank" href="{{ url('invoice/event') }}?id=${row.id}" title="Download Invoice" class="btn btn-secondary btn-xs">
@@ -169,16 +169,11 @@
         let postData = {
             'id': id
         };
-        ajaxCallData(PANELURL + 'delete-event', postData, 'POST')
-            .then(function(result) {
-                if (isJSON(result)) {
-                    let resp = JSON.parse(result);
-                    if (resp.success == 1) {
-                        getData();
-                        notifyAlert('Deleted successfully!', 'success');
-                    } else {
-                        notifyAlert('You are not authorized!', 'danger');
-                    }
+        ajaxCallData(PANELURL + 'event/delete', postData, 'POST')
+            .then(function(resp) {
+                if (resp.success == 1) {
+                    getData();
+                    notifyAlert('Deleted successfully!', 'success');
                 } else {
                     notifyAlert('You are not authorized!', 'danger');
                 }

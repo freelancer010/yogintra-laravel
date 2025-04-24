@@ -51,14 +51,19 @@ class EventController extends Controller
                 'client_name'   => $request->input('name'),
                 'event_name'    => $request->input('eventName'),
                 'client_number' => $request->input('number'),
-                'country'       => $request->input('country'),
-                'state'         => $request->input('state'),
-                'city'          => $request->input('city'),
+                'country'       => $request->input('country') ?? '',
+                'state'         => $request->input('state') ?? '',
+                'city'          => $request->input('city') ?? '',
                 'email'         => $request->input('email'),
-                'class_type'    => $request->input('class'),
+                'class_type'    => $request->input('class') ?? '',
                 'created_date'  => $request->input('date') ?: now(),
                 'package'       => $request->input('package'),
-                'payment_type'  => $request->input('payment_type')
+                'payment_type'  => $request->input('payment_type'),
+                'client_message'  => '',
+                'attendee_name' => '',
+                'quotation' => '',
+                'demo' => '',
+                'created_by'   => session('username')
             ];
 
             if ($data['payment_type'] === 'Full Payment') {
@@ -134,7 +139,7 @@ class EventController extends Controller
             ]);
         }
 
-        return view('bookingDetails');
+        return view('eventDetails');
     }
 
     public function deleteData(Request $request)

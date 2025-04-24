@@ -1,19 +1,21 @@
-<?php
-$this->load->view('includes/header');
-?>
+@extends('layouts.layout')
+@section('content')
 <style>
     .list-group-item {
         border: 0px solid rgba(0, 0, 0, .125);
         border-bottom: 1px solid rgba(0, 0, 0, .125);
     }
-    .hide{
+
+    .hide {
         display: none;
     }
-    .view{
+
+    .view {
         cursor: pointer;
     }
-    .show-now{
-        display:block;
+
+    .show-now {
+        display: block;
     }
 </style>
 <!-- Content Wrapper. Contains page content -->
@@ -48,75 +50,57 @@ $this->load->view('includes/header');
                             <p class="text-muted text-center">Profile Details</p>
                             <div class="text-center">
                                 <img style="height:200px; width:200px" id="profile" class="profile-user-img img-fluid img-circle"
-                                    src="<?= base_url('assets/') ?>dist/img/default-profile.png"
-                                    alt="User profile picture">
+                                    src="{{ asset('assets/dist/img/default-profile.png') }}" alt="User profile picture">
                             </div>
                             <br>
                             <ul class="list-groups list-group-unbordered mb-3 row align-items-start"></ul>
-
                         </div>
-                        <!-- /.card-body -->
                     </div>
-                    <!-- /.card -->
-
-                    <!-- About Me Box -->
                 </div>
-                <!-- /.col -->
-                <!-- /.row -->
-            </div><!-- /.container-fluid -->
+            </div>
     </section>
-    <!-- /.content -->
 </div>
-<!-- /.content-wrapper -->
-<?php
-$this->load->view('includes/footer');
-?>
+@endsection
+
+@section('scripts')
 <script>
-    let viewNum = ()=>{
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    const PANELURL = "{{ url('/') }}/";
+    const param = "{{ request('id') }}";
+
+    let viewNum = () => {
         $('#show-number').toggleClass('hide')
     };
-    let viewEmail = ()=>{
+
+    let viewEmail = () => {
         $('#show-email').toggleClass('hide')
     };
-    let changeReadStatus = ()=>{
-        let param = "<?= $_GET['id'] ?>";
 
-        var apiUrl = PANELURL + 'trainer/changeReadStatus';
-        ajaxCallData(apiUrl, { 'id': param }, 'POST')
-            .then(function (result) {
-                response = JSON.parse(result);
-                // console.log(response);
-            })
-            .catch(function (err) {
+    let changeReadStatus = () => {
+        var apiUrl = PANELURL + 'trainers/changeReadStatus';
+        ajaxCallData(apiUrl, {
+                'id': param
+            }, 'POST')
+            .then(function(result) {})
+            .catch(function(err) {
                 console.log(err);
             });
     }
+
     let getData = () => {
         let postData = {
-            'id':<?= $_GET['id']?>
+            'id': param
         }
-        var apiUrl = PANELURL + 'trainers/view';
+        var apiUrl = PANELURL + 'trainers/profile';
         ajaxCallData(apiUrl, postData, 'POST')
-            .then(function (result) {
-                result = JSON.parse(result);
+            .then(function(result) {
                 resp = result.data;
-
-                // let cvFileName = resp.cv_filecfdb7_file;
-                // let filename = cvFileName.replace(cvFileName.slice(0,19),'');
-                // let timestamp = cvFileName.slice(0,10);
-                // let checkForSlash = timestamp.match(/\\/);
-
-                // let documentUrl = '';
-                // if(!checkForSlash){
-                //     let toDate = new Date(timestamp *1000);
-                //     let year = toDate.toLocaleString('en-GB', { timeZone: 'UTC' }).slice(6,10);
-                //     let month = toDate.toLocaleString('en-GB', { timeZone: 'UTC' }).slice(3,5);
-                //     documentUrl = year+'/'+month+'/';
-                // }else{
-                //     documentUrl = cvFileName;
-                // }
-                
-                resp.profile_image ?  $('#profile').attr('src', PANELURL+resp.profile_image) : ' ' ;
+                resp.profile_image ? $('#profile').attr('src', PANELURL + resp.profile_image) : ' ';
 
                 $('.list-groups').append(`
                             <li class="list-group-item col-lg-6">
@@ -254,19 +238,24 @@ $this->load->view('includes/footer');
                                 </li>
                                 <a href="${PANELURL}trainers/edit?id=${resp.id}" class="btn btn-primary btn-block"><b>Edit Profile</b></a>
                                 `);
-                                if(resp.is_trainer == 0 ){
-                                    $('#trDoc').css('display','none');
-                                    $('#profile').css('display','none');
-                                    $('#back-btn').on('click',()=>{redirect('recruiter')});
-                                }else{
-                                    $('#back-btn').on('click',()=>{redirect('trainers')});
-                                }
+                if (resp.is_trainer == 0) {
+                    $('#trDoc').css('display', 'none');
+                    $('#profile').css('display', 'none');
+                    $('#back-btn').on('click', () => {
+                        redirect('recruiter')
+                    });
+                } else {
+                    $('#back-btn').on('click', () => {
+                        redirect('trainers')
+                    });
+                }
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 console.log(err);
             });
     };
     changeReadStatus();
-   
+
     getData();
 </script>
+@endsection

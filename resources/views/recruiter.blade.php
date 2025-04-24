@@ -26,7 +26,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header yogintra align-items-center d-flex justify-content-between">
-                            <a href="recruit/add" type="button" class="btn btn-sm btn-primary">
+                            <a href="recruiter/add" type="button" class="btn btn-sm btn-primary">
                                 <i class="fas fa-plus"></i>&nbsp;&nbsp;Add Recruitments
                             </a>
                             
@@ -124,7 +124,7 @@
                     },
                     { data: null,
                         render: function (data, type, row) {
-                            return `<a href="${PANELURL}trainers/view?id=${row.id}"  style="${(row.read_status == 0) ? 'font-weight:600;' :''}">${row.name}</a>`;
+                            return `<a href="${PANELURL}trainers/profile?id=${row.id}"  style="${(row.read_status == 0) ? 'font-weight:600;' :''}">${row.name}</a>`;
                         }
                     },
                     { data: null,
@@ -209,10 +209,6 @@
     };
     
     getData();
-    // setInterval(function(){  
-    //     $('#loader').css('display','none');
-    //     getData(); 
-    // },30000);
 
     let change_status = (id,status) => {
         let postData = {

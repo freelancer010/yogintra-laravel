@@ -1,6 +1,5 @@
-<?php
-$this->load->view('includes/header');
-?>
+@extends('layouts.layout')
+@section('content')
 <style>
     .list-group-item {
         border: 0px solid rgba(0, 0, 0, .125);
@@ -15,8 +14,7 @@ $this->load->view('includes/header');
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6 d-flex">
-                    <a href="<?php echo base_url(); ?>event" class="btn btn-secondary btn-sm"><i
-                            class="fas fa-backward"></i></a>&nbsp;
+                    <a href="{{ url('event') }}" class="btn btn-secondary btn-sm"><i class="fas fa-backward"></i></a>&nbsp;
                     <h1>Booking Details</h1>
                 </div>
                 <div class="col-sm-6">
@@ -38,10 +36,10 @@ $this->load->view('includes/header');
                     <!-- Profile Image -->
                     <div class="card card-primary card-outline">
                         <div class="card-body box-profile">
-                            <p class="text-muted text-center my-12">Booking Details</p><br/><br/>
-							<div class="overlay hidden">
-                            <i class="fas fa-2x fa-sync-alt"></i>
-                        </div>
+                            <p class="text-muted text-center my-12">Booking Details</p><br /><br />
+                            <div class="overlay hidden">
+                                <i class="fas fa-2x fa-sync-alt"></i>
+                            </div>
                             <ul class="list-groups list-group-unbordered mb-3 row align-items-start"></ul>
                         </div>
                     </div>
@@ -49,18 +47,27 @@ $this->load->view('includes/header');
             </div>
     </section>
 </div>
-<?php
-$this->load->view('includes/footer');
-?>
+@endsection
+
+@section('scripts')
 <script>
-    let param = "<?= $_GET['id'] ?>";
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    const param = "{{ request('id') }}";
+    const PANELURL = "{{ url('/') }}/";
+
     let getData = () => {
-        var apiUrl = PANELURL + 'event/view';
-        ajaxCallData(apiUrl, { 'bookingId': param }, 'POST')
-            .then(function (result) {
-                resp = JSON.parse(result);
+        var apiUrl = PANELURL + 'event/profile';
+        ajaxCallData(apiUrl, {
+                'bookingId': param
+            }, 'POST')
+            .then(function(resp) {
                 resp = resp['data'];
-                resppaymentDetails= resp['paymentDetails'];
+                resppaymentDetails = resp['paymentDetails'];
 
                 $('.list-groups').append(`
                                 <li class="list-group-item col-lg-6 col-sm-12">
@@ -134,14 +141,14 @@ $this->load->view('includes/footer');
                                         <a class="float-right"></a>
                                     </li>`
                                 }
-                                <a href="${PANELURL}event/editEvents?id=${resp.id}" class="btn btn-primary btn-block"><b>Edit Event</b></a>
+                                <a href="${PANELURL}event/edit?id=${resp.id}" class="btn btn-primary btn-block"><b>Edit Event</b></a>
 
 
                                 `);
 
-                                $.each(resppaymentDetails, function(){
-                                newRowAdd =
-                                    `<div id="row" class="row mt-2">
+                $.each(resppaymentDetails, function() {
+                    newRowAdd =
+                        `<div id="row" class="row mt-2">
                                         <div class="input-group col-6">
                                             <p class="amount">Amount:&nbsp;&nbsp;${this.amount}</p>
                                         </div>
@@ -149,13 +156,14 @@ $this->load->view('includes/footer');
                                             <p lass="amountDate">Date:&nbsp;&nbsp;${(resp.created_date).slice(0,10)}&nbsp; at &nbsp;${(resp.created_date).slice(11)}</p>
                                         </div>
                                     </div>`;
-                                    $('#oldinput').append(newRowAdd);
-                                });
+                    $('#oldinput').append(newRowAdd);
+                });
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 console.log(err);
             });
     };
 
     getData();
 </script>
+@endsection

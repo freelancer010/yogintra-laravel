@@ -81,15 +81,16 @@ class TrainerController extends Controller
         return view('addRecruits');
     }
 
+    public function viewProfile(){
+        return view('trainerProfile');
+    }
 
-    public function viewTrainersProfile(Request $request)
+    public function getProfileDetails(Request $request)
     {
         if ($request->id) {
             $trainer = DB::table('trainer')->where('id', $request->id)->first();
             return response()->json(['success' => 1, 'data' => $trainer]);
         }
-
-        return view('trainerProfile');
     }
 
     public function savedata(Request $request)
@@ -116,6 +117,7 @@ class TrainerController extends Controller
             $data['message'] = $data['client-message'] ?? '';
             unset($data['client-message']);
             $data['created_date'] = $data['date'] ?? now();
+            $data['updated_date'] = $data['date'] ?? now();
             unset($data['date']);
 
             if ($request->hasFile('profileImage')) {

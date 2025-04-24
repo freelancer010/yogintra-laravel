@@ -62,6 +62,7 @@ Route::get('/recruiter', function () {
     return view('recruiter');
 })->name('recruiter');
 Route::post('/recruiter/view', [TrainerController::class, 'getRecruiter'])->name('getRecruiter');
+Route::get('/recruiter/add', [TrainerController::class, 'addRecruit'])->name('addRecruit');
 
 
 Route::get('/trainers', function () {
@@ -69,6 +70,10 @@ Route::get('/trainers', function () {
 })->name('trainers');
 
 Route::post('/trainers/view', [TrainerController::class, 'getTrainer'])->name('getTrainer');
+Route::post('/trainers/add', [TrainerController::class, 'savedata']);
+Route::get('/trainers/profile', [TrainerController::class, 'viewProfile']);
+Route::post('/trainers/profile', [TrainerController::class, 'getProfileDetails']);
+Route::post('/trainers/changeReadStatus', [TrainerController::class, 'changeReadStatus']);
 
 // Events
 Route::get('/event', function () {
@@ -76,6 +81,11 @@ Route::get('/event', function () {
 })->name('event');
 
 Route::post('/event/view', [EventController::class, 'getEvent'])->name('getEvent');
+Route::match(['get', 'post'], '/event/add', [EventController::class, 'addEvents'])->name('event.add');
+Route::get('/event/edit', [EventController::class, 'editEvents'])->name('event.edit');
+Route::post('/event/profile', [EventController::class, 'getBookingProfile'])->name('getBookingProfile');
+Route::get('/event/profile/{id}', [EventController::class, 'getBookingProfile']);
+Route::post('/event/delete', [EventController::class, 'deleteData']);
 
 // Yoga Center
 Route::get('/yoga-bookings', function () {
