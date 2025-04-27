@@ -6,14 +6,13 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\LeadController;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\RecruitController;
 use App\Http\Controllers\TrainerController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\YogaController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\RenewalController;
+use App\Http\Controllers\InvoiceController;
 
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
@@ -40,22 +39,49 @@ Route::get('/rejected', [DataController::class, 'rejectedView'])->name('rejected
 Route::post('/rejected', [DataController::class, 'rejected']);
 
 // Leads
-Route::get('/lead', [LeadController::class, 'index'])->name('lead');
+Route::get('/lead', function () {
+    return view('leads');
+})->name('leads');
 Route::post('/lead', [LeadController::class, 'getLeads'])->name('lead');
+Route::match(['get', 'post'], '/lead/add', [LeadController::class, 'addLead']);
+Route::get('/lead/profile', [LeadController::class, 'viewProfile']);
+Route::post('/lead/profile', [LeadController::class, 'getProfile']);
+Route::get('/lead/edit', [LeadController::class, 'editProfile']);
+Route::post('/lead/edit', [LeadController::class, 'editLead']);
+Route::post('/lead/changeReadStatus', [LeadController::class, 'changeReadStatus']);
+Route::post('/lead/delete', [LeadController::class, 'deleteData']);
+Route::post('/lead/changeStatus', [LeadController::class, 'changeLeadStatus']);
+
 
 // telecalling
 Route::get('/telecalling', function () {
     return view('telecalling');
 })->name('telecalling');
 Route::post('/telecalling/view', [LeadController::class, 'getTellcalling'])->name('getTellcalling');
+Route::get('/telecalling/profile', [LeadController::class, 'viewProfile']);
+Route::post('/telecalling/profile', [LeadController::class, 'getProfile']);
+Route::post('/telecalling/changeStatus', [LeadController::class, 'changeStatusToYoga']);
+Route::post('/telecalling/changeStatusToLeads', [LeadController::class, 'changeStatusToLeads']);
+Route::post('/telecalling/delete', [LeadController::class, 'deleteData']);
 
 // Customers
-Route::get('/renewal', [CustomerController::class, 'renewal'])->name('customer.renewal');
-
 Route::get('/customer', function () {
     return view('customer');
 })->name('customer');
 Route::post('/customer/view', [LeadController::class, 'getCustomer'])->name('getCustomer');
+Route::get('/customer/profile', [LeadController::class, 'viewProfile']);
+Route::post('/customer/profile', [LeadController::class, 'getProfile']);
+Route::post('/customer/changeStatusToTelecalling', [LeadController::class, 'changeStatusToTelecalling']);
+Route::post('/customer/delete', [LeadController::class, 'deleteData']);
+
+// Renewal
+Route::get('/renewal', [RenewalController::class, 'index'])->name('customer.renewal');
+Route::post('/renewal/view', [RenewalController::class, 'getRenewal']);
+Route::get('/renewal/edit', [RenewalController::class, 'editRenewal']);
+Route::post('/renewal/delete', [RenewalController::class, 'deleteData']);
+Route::post('/renewal/skipRenew', [RenewalController::class, 'skipRenew']);
+Route::post('/renewal/moveToRenew', [RenewalController::class, 'moveToRenew']);
+
 
 // Trainers
 Route::get('/recruiter', function () {
@@ -75,8 +101,14 @@ Route::get('/trainers/profile', [TrainerController::class, 'viewProfile']);
 Route::post('/trainers/profile', [TrainerController::class, 'getProfileDetails']);
 Route::post('/trainers/changeReadStatus', [TrainerController::class, 'changeReadStatus']);
 Route::get('/trainers/edit', [TrainerController::class, 'viewTrainerbyId']);
-Route::get('/trainers/edit', function () { return view('edit-trainer-profile'); })->name('trainers.edit');
+Route::get('/trainers/edit', function () {
+    return view('edit-trainer-profile');
+})->name('trainers.edit');
 Route::post('/trainers/edit', [TrainerController::class, 'viewTrainerbyId']);
+Route::post('/trainers/changeStatus', [TrainerController::class, 'changeStatus']);
+Route::post('/trainers/delete', [TrainerController::class, 'deleteData']);
+Route::post('/trainers/is_featured_trainer', [TrainerController::class, 'isFeaturedTrainer']);
+Route::post('/trainers/show_trainer', [TrainerController::class, 'showTrainer']);
 
 // Events
 Route::get('/event', function () {
@@ -124,3 +156,8 @@ Route::post('/admin/change_status', [AdminController::class, 'changeStatus'])->n
 Route::get('/admin/delete/{id}', [AdminController::class, 'delete'])->name('admin.delete');
 Route::get('/admin/edit/{id}', [AdminController::class, 'edit'])->name('admin.edit');
 Route::post('/admin/edit/{id}', [AdminController::class, 'edit'])->name('admin.edit');
+
+
+// invoice
+Route::get('/invoice/yoga', [InvoiceController::class, 'yoga']);
+Route::get('/invoice/event', [InvoiceController::class, 'event']);

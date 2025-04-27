@@ -153,7 +153,7 @@
                                 buttons += `<a href="{{ url('yoga-bookings/edit') }}?id=${row.id}" title="Edit" class="btn btn-warning btn-xs mr-1">
                                             <i class="fa fa-edit"></i>
                                         </a>`;
-                                buttons += `<a target="_blank" href="{{ url('invoice/event') }}?id=${row.id}" title="Download Invoice" class="btn btn-secondary btn-xs">
+                                buttons += `<a target="_blank" href="{{ url('invoice/yoga') }}?id=${row.id}" title="Download Invoice" class="btn btn-secondary btn-xs">
                                             <i class="fa fa-download"></i>
                                         </a>
                                         ${row.renew_skip == 1 ? `

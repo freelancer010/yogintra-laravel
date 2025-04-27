@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Lead;
-use App\Models\LeadStage;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -13,11 +10,6 @@ use Illuminate\Support\Facades\View;
 
 class LeadController extends Controller
 {
-    public function index()
-    {
-        return view('leads');
-    }
-
     public function getLeads(Request $request)
     {
         $response = [];
@@ -95,12 +87,6 @@ class LeadController extends Controller
             }
         }
 
-        // Clean class_type field
-        // foreach ($resp as &$item) {
-        //     if (isset($item['class_type'])) {
-        //         $item['class_type'] = str_replace(' Session', '', $item['class_type']);
-        //     }
-        // }
         foreach ($resp as $item) {
             if (isset($item->class_type)) {
                 $item->class_type = str_replace(' Session', '', $item->class_type);
@@ -128,112 +114,255 @@ class LeadController extends Controller
         return json_decode($output, true);
     }
 
-    public function add()
+    public function addLead(Request $request)
     {
-        $data['users'] = User::where('role !=', 'Customer')->get();
-        $data['lead_stages'] = LeadStage::all();
+        if ($request->has('name')) {
 
-        return view('leads/add', $data);
+            $data = [
+                'name' => $request->input('name', ''),
+                'number' => $request->input('number', ''),
+                'country' => $request->input('country', ''),
+                'state' => $request->input('state', ''),
+                'city' => $request->input('city', ''),
+                'source' => $request->input('lead-source', ''),
+                'email' => $request->input('email', ''),
+                'class_type' => $request->input('class', ''),
+                'call_from' => $request->input('call-from', ''),
+                'call_to' => $request->input('call-to', ''),
+                'message' => $request->input('client-message', ''),
+                'created_date' => $request->input('date', ''),
+                'package' => $request->input('package', ''),
+                'quotation' => $request->input('quote', '0'),
+                'dempay' => $request->input('demoPay', '0'),
+                'attempt1' => $request->input('attempt1', '0'),
+                'attempt2' => $request->input('attempt2', '0'),
+                'attempt3' => $request->input('attempt3', '0'),
+                'attempt1Remarks' => $request->input('remarks1', ''),
+                'attempt2Remarks' => $request->input('remarks2', ''),
+                'attempt3Remarks' => $request->input('remarks3', ''),
+                'attempt1Date' => $request->input('atemptDate1', '0000-00-00 00:00:00'),
+                'attempt2Date' => $request->input('atemptDate2', '0000-00-00 00:00:00'),
+                'attempt3Date' => $request->input('atemptDate3', '0000-00-00 00:00:00'),
+                'attendeeName' => $request->input('attendeeName', ''),
+                'created_by' => session('username'),
+                'status' => 1,
+            ];
+
+            $lead = DB::table('leads')->insertGetId($data);
+
+            if ($lead) {
+                return response()->json([
+                    'success' => 1,
+                    'message' => 'Inserted Successfully'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => 0,
+                    'message' => 'Some error occurred!'
+                ]);
+            }
+        }
+        return view('addLead');
     }
 
-    public function insert(Request $request)
+    public function viewProfile(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name'         => 'required',
-            'email'        => 'nullable|email',
-            'phone'        => 'nullable',
-            'assigned_to'  => 'required',
-            'stage_id'     => 'required',
-        ]);
+        return view('leadProfile');
+    }
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+    public function getProfile(Request $request)
+    {
+        $id = $request->post('id');
+
+        $lead = DB::table('leads')->select('leads.*', 'trainer.name as trainerName')
+            ->leftJoin('trainer', 'trainer.id', '=', 'leads.trainer_id')
+            ->where('leads.id', $id)
+            ->first();
+
+        $renewDetails = DB::table('package_renew_detail')->where('lead_id', $id)->get();
+
+        if ($lead) {
+            $lead->class_type = str_replace([' Session', ' Booking'], '', $lead->class_type);
         }
 
-        $lead = new Lead();
-        $lead->name        = $request->input('name');
-        $lead->email       = $request->input('email');
-        $lead->phone       = $request->input('phone');
-        $lead->assigned_to = $request->input('assigned_to');
-        $lead->stage_id    = $request->input('stage_id');
-        $lead->source      = $request->input('source');
-        $lead->notes       = $request->input('notes');
-        $lead->save();
+        $trainers = $this->getTrainers();
+        $paymentDetails = $this->getPayments($id);
 
-        return redirect('leads')->with('success', 'Lead Added Successfully');
+        return response()->json([
+            'leads' => $lead,
+            'renew_details' => $renewDetails,
+            'trainers' => $trainers,
+            'paymentDetails' => $paymentDetails,
+        ]);
     }
 
-    public function edit($id)
+    public function editProfile(Request $request)
     {
-        $data['lead'] = Lead::findOrFail($id);
-        $data['users'] = User::where('role !=', 'Customer')->get();
-        $data['lead_stages'] = LeadStage::all();
+        $id = $request->query('id');
+        $row = DB::table('leads')->find($id);
 
-        return view('leads/edit', $data);
+        return view('editLead', ['row' => $row]);
     }
 
-    public function update(Request $request)
+    public function editLead(Request $request)
+    {
+        if ($request->has('leadId')) {
+            $leadId = $request->post('leadId');
+
+            $data = [
+                'name'          => $request->post('name', ''),
+                'number'        => $request->post('number', ''),
+                'country'       => $request->post('country', ''),
+                'state'         => $request->post('state', ''),
+                'city'          => $request->post('city', ''),
+                'source'        => $request->post('lead-source', ''),
+                'email'         => $request->post('email', ''),
+                'class_type'    => $request->post('class') ?? $request->post('hidden_class'),
+                'call_from'     => $request->post('call-from', ''),
+                'call_to'       => $request->post('call-to', ''),
+                'message'       => $request->post('client-message', ''),
+                'created_date'  => $request->post('date', ''),
+                'package'       => $request->post('package', ''),
+                'quotation'     => $request->post('quote', ''),
+                'dempay'        => $request->post('demoPay', ''),
+                'attempt1'      => $request->post('attempt1', 0),
+                'attempt2'      => $request->post('attempt2', 0),
+                'attempt3'      => $request->post('attempt3', 0),
+                'attempt1Remarks' => $request->post('remarks1', ''),
+                'attempt2Remarks' => $request->post('remarks2', ''),
+                'attempt3Remarks' => $request->post('remarks3', ''),
+                'attempt1Date'  => $request->post('atemptDate1', ''),
+                'attempt2Date'  => $request->post('atemptDate2', ''),
+                'attempt3Date'  => $request->post('atemptDate3', ''),
+                'attendeeName'  => $request->post('attendeeName', ''),
+                'trainer_id'    => $request->post('trainer', ''),
+                'payTotrainer'  => $request->post('trainerPayment', ''),
+                'payableAmount' => $request->post('payableAmount', ''),
+                'demDate'       => !empty($request->post('demDate')) ? str_replace('T', ' ', $request->post('demDate')) : '0000-00-00 00:00:00',
+                'trainerPayDate' => $request->post('trainerPayDate', ''),
+                'payment_type'  => $request->post('payment_type', ''),
+            ];
+
+            // set status based on attempt1
+            $status = ($request->post('attempt1') == 1) ? 3 : (($request->post('attempt1') == 2) ? 4 : 0);
+            if (!empty($status)) {
+                $data['status'] = $status;
+            }
+
+            // package end date
+            if (!empty($request->post('packageEndDate'))) {
+                $data['package_end_date'] = $request->post('packageEndDate');
+            }
+
+            // full payment or partition
+            if ($request->post('payment_type') == 'Full Payment') {
+                $data['full_payment'] = $request->post('totalPayAmount');
+                $data['totalPayDate'] = str_replace('T', ' ', $request->post('totalPayDate'));
+            } else if ($request->post('payment_type') == 'Partition Payment') {
+                $fullPayments = $request->post('fullPayment');
+                $data['full_payment'] = array_sum((array)$fullPayments);
+            }
+
+            $resp = DB::table('leads')->where('id', $leadId)->update($data);
+
+            if ($resp) {
+                if ($request->post('payment_type') == 'Partition Payment') {
+
+                    $batchInsert = [];
+                    $fullPayments = (array) $request->post('fullPayment');
+                    $fullPaymentDates = (array) $request->post('fullPaymentDate');
+                    $totalPayDate_change = null;
+
+                    foreach ($fullPayments as $key => $row) {
+                        if ($row > 0) {
+                            $batchInsert[] = [
+                                'leadId' => $leadId,
+                                'amount' => $row,
+                                'created_date' => str_replace('T', ' ', $fullPaymentDates[$key]),
+                                'created_by' => session('username'),
+                                'status' => 1,
+                                'type' => 'lead',
+                            ];
+                        }
+                        $totalPayDate_change = str_replace('T', ' ', $fullPaymentDates[$key]);
+                    }
+
+                    if (!empty($totalPayDate_change)) {
+                        DB::table('leads')->where('id', $leadId)->update(['totalPayDate' => $totalPayDate_change]);
+                    }
+
+                    if (count($batchInsert) > 0) {
+                        DB::table('paymentdata')
+                            ->where('leadId', $leadId)
+                            ->where('type', 'lead')
+                            ->update(['status' => 0]);
+
+                        DB::table('paymentdata')->insert($batchInsert);
+                    }
+                }
+
+                return response()->json([
+                    'success' => 1,
+                    'message' => 'Inserted Successfully'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => 0,
+                    'message' => 'Some error occurred!'
+                ]);
+            }
+        } else {
+            return response()->json([
+                'success' => 0,
+                'message' => 'Some error occurred!'
+            ]);
+        }
+    }
+
+    public function changeReadStatus(Request $request)
+    {
+        if ($request->isMethod('post') && $request->has('id')) {
+            $updated = DB::table('leads')
+                ->where('id', $request->post('id'))
+                ->update(['read_status' => 1]);
+
+            if ($updated) {
+                return response()->json([
+                    'success' => 1,
+                    'message' => 'Updated Successfully'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => 0,
+                    'message' => 'Lead not found or already updated!'
+                ]);
+            }
+        }
+    }
+
+    private function getTrainers()
+    {
+        return DB::table('trainer')->where('is_trainer', 1)->orderBy('id', 'desc')->get();
+    }
+
+    private function getPayments($leadId)
+    {
+        return DB::table('paymentdata')->where([
+            ['status', '=', 1],
+            ['leadId', '=', $leadId],
+            ['type', '=', 'lead'],
+        ])->get();
+    }
+
+    public function changeLeadStatus(Request $request)
     {
         $id = $request->input('id');
+        $updated = DB::table('leads')->where('id', $id)->update(['status' => 2, 'created_by' => session('username')]);
 
-        $validator = Validator::make($request->all(), [
-            'name'         => 'required',
-            'email'        => 'nullable|email',
-            'phone'        => 'nullable',
-            'assigned_to'  => 'required',
-            'stage_id'     => 'required',
+        return response()->json([
+            'success' => $updated ? 1 : 0,
+            'message' => $updated ? 'Status Changed Successfully' : 'No data found!'
         ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        $lead = Lead::findOrFail($id);
-        $lead->name        = $request->input('name');
-        $lead->email       = $request->input('email');
-        $lead->phone       = $request->input('phone');
-        $lead->assigned_to = $request->input('assigned_to');
-        $lead->stage_id    = $request->input('stage_id');
-        $lead->source      = $request->input('source');
-        $lead->notes       = $request->input('notes');
-        $lead->save();
-
-        return redirect('leads')->with('success', 'Lead Updated Successfully');
-    }
-
-    public function delete($id)
-    {
-        $lead = Lead::findOrFail($id);
-        $lead->delete();
-
-        return redirect('leads')->with('success', 'Lead Deleted Successfully');
-    }
-
-    public function ajax_list(Request $request)
-    {
-        $user = Auth::user();
-        $role = $user->role;
-
-        $query = Lead::query()->with(['assignedUser', 'stage']);
-
-        if ($role != 'Admin') {
-            $query->where('assigned_to', $user->id);
-        }
-
-        return datatables()->of($query)
-            ->addColumn('assigned_to', fn($row) => $row->assignedUser->name ?? '')
-            ->addColumn('stage', fn($row) => $row->stage->name ?? '')
-            ->addColumn('action', function ($row) {
-                return '
-                    <a href="' . url("leads/edit/" . $row->id) . '" class="btn btn-sm btn-primary">Edit</a>
-                    <form action="' . url("leads/delete/" . $row->id) . '" method="POST" style="display:inline;">
-                        ' . csrf_field() . '
-                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm(\'Are you sure?\')">Delete</button>
-                    </form>
-                ';
-            })
-            ->rawColumns(['action'])
-            ->make(true);
     }
 
     // telecalling
@@ -283,106 +412,74 @@ class LeadController extends Controller
         }
     }
 
-
-    // customer
-    public function savedata(Request $request)
+    public function changeStatusToYoga(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string',
-        ]);
+        $id = $request->post('id');
 
-        $data = $request->only([
-            'name',
-            'number',
-            'country',
-            'state',
-            'city',
-            'lead-source',
-            'email',
-            'class',
-            'call-from',
-            'call-to',
-            'client-message',
-            'date',
-            'package',
-            'quote',
-            'demoPay',
-            'attendeeName',
-            'trainer',
-            'trainerPayment',
-            'trainerPayDate',
-            'packageEndDate',
-            'totalPayDate',
-            'payableAmount',
-            'payment_type',
-        ]);
+        $dataM = DB::table('leads')->where('id', $id)->first();
 
-        $lead = new Lead();
-        $lead->fill([
-            'name' => $data['name'],
-            'number' => $data['number'],
-            'country' => $data['country'],
-            'state' => $data['state'],
-            'city' => $data['city'],
-            'source' => $data['lead-source'],
-            'email' => $data['email'],
-            'class_type' => $data['class'],
-            'call_from' => $data['call-from'],
-            'call_to' => $data['call-to'],
-            'message' => $data['client-message'],
-            'created_date' => $data['date'],
-            'package' => $data['package'] ?? '0',
-            'quotation' => $data['quote'],
-            'dempay' => $data['demoPay'],
-            'attempt1' => 1,
-            'attendeeName' => $data['attendeeName'],
-            'trainer_id' => $data['trainer'],
-            'created_by' => Auth::user()->username ?? 'system',
-            'payTotrainer' => $data['trainerPayment'] ?? 0,
-            'trainerPayDate' => $data['trainerPayDate'],
-            'demDate' => str_replace('T', ' ', $request->input('demDate')),
-            'package_end_date' => $data['packageEndDate'] ?? null,
-            'totalPayDate' => $data['totalPayDate'],
-            'payableAmount' => $data['payableAmount'],
-            'payment_type' => $data['payment_type'],
-            'status' => 3,
-        ]);
+        if ($dataM) {
+            if ($dataM->class_type == 'Yoga Center') {
+                $dataMain = [
+                    'client_name'      => $dataM->name,
+                    'client_number'    => $dataM->number,
+                    'email'            => $dataM->email,
+                    'country'          => $dataM->country,
+                    'state'            => $dataM->state,
+                    'city'             => $dataM->city,
+                    'lead_transfer_id' => $dataM->id,
+                ];
 
-        if ($data['payment_type'] === 'Full Payment') {
-            $lead->full_payment = $request->input('totalPayAmount');
-            $lead->totalPayDate = str_replace('T', ' ', $request->input('totalPayDate'));
-        } elseif ($data['payment_type'] === 'Partition Payment') {
-            $lead->full_payment = array_sum($request->input('fullPayment', []));
-        }
+                DB::table('yoga')->insert($dataMain);
 
-        if ($lead->save()) {
-            if ($data['payment_type'] === 'Partition Payment') {
-                $payments = [];
-                foreach ($request->input('fullPayment', []) as $key => $amount) {
-                    if ($amount > 0) {
-                        $payments[] = [
-                            'leadId' => $lead->id,
-                            'amount' => $amount,
-                            'created_date' => $request->input('fullPaymentDate')[$key],
-                            'created_by' => Auth::user()->username,
-                            'status' => 1,
-                            'type' => 'lead',
-                        ];
-                    }
-                }
-
-                if (!empty($payments)) {
-                    PaymentData::where(['leadId' => $lead->id, 'type' => 'lead'])->update(['status' => 0]);
-                    PaymentData::insert($payments);
+                $resp = DB::table('leads')->where('id', $id)->update(['status' => 6]);
+            } else {
+                $data = DB::table('leads')->select('attempt1', 'attempt2', 'attempt3')->where('id', $id)->first();
+                $resp = false;
+                if ($data && ($data->attempt1 == 1 || $data->attempt2 == 1 || $data->attempt3 == 1)) {
+                    $resp = DB::table('leads')->where('id', $id)->update(['status' => 3]);
                 }
             }
 
-            return response()->json(['success' => 1, 'message' => 'Customer Added Successfully']);
+            if ($resp) {
+                return response()->json([
+                    'success' => 1,
+                    'message' => 'Status Changed Successfully'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => 1,
+                    'message' => 'No attempts for telecalling found!'
+                ]);
+            }
+        } else {
+            return response()->json([
+                'success' => 0,
+                'message' => 'Lead not found!'
+            ]);
         }
-
-        return response()->json(['success' => 0, 'message' => 'Unable to add customer!']);
     }
 
+    public function changeStatusToLeads(Request $request)
+    {
+        $id = $request->post('id');
+
+        $resp = DB::table('leads')->where('id', $id)->update(['status' => 1]);
+
+        if ($resp) {
+            return response()->json([
+                'success' => 1,
+                'message' => 'Status Changed Successfully'
+            ]);
+        } else {
+            return response()->json([
+                'success' => 0,
+                'message' => 'No data found!'
+            ]);
+        }
+    }
+
+    // customer
     public function getCustomer(Request $request)
     {
         $user = Auth::user();
@@ -439,7 +536,7 @@ class LeadController extends Controller
     public function changeStatusToTelecalling(Request $request)
     {
         $id = $request->input('id');
-        $updated = Lead::where('id', $id)->update(['status' => 2]);
+        $updated = DB::table('leads')->where('id', $id)->update(['status' => 2]);
 
         return response()->json([
             'success' => $updated ? 1 : 0,
@@ -452,7 +549,7 @@ class LeadController extends Controller
         $leadId = $request->input('lead_id');
         $yogaId = $request->input('id');
 
-        $updated = Lead::where('id', $leadId)->update(['status' => 2]);
+        $updated = DB::table('leads')->where('id', $leadId)->update(['status' => 2]);
 
         if ($updated) {
             DB::table('yoga')->where('id', $yogaId)->delete();
@@ -465,7 +562,7 @@ class LeadController extends Controller
     public function deleteData(Request $request)
     {
         $id = $request->input('id');
-        $deleted = Lead::where('id', $id)->update(['status' => 0]);
+        $deleted = DB::table('leads')->where('id', $id)->update(['status' => 0]);
 
         return response()->json([
             'success' => $deleted ? 1 : 0,

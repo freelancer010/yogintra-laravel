@@ -242,11 +242,11 @@
                     $('#trDoc').css('display', 'none');
                     $('#profile').css('display', 'none');
                     $('#back-btn').on('click', () => {
-                        redirect('recruiter')
+                        window.location.replace(PANELURL + '/recruiter')
                     });
                 } else {
                     $('#back-btn').on('click', () => {
-                        redirect('trainers')
+                        window.location.replace(PANELURL + 'trainers')
                     });
                 }
             })

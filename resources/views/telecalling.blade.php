@@ -30,10 +30,8 @@
                                         <button type="button" class="btn btn-sm btn-success mr-3 " onclick=filter()>
                                             Generate&nbsp;&nbsp;<i class="fas fa-arrow-right"></i>
                                         </button>
-                                        <!-- <button type="button" class="btn btn-danger mr-3" onclick=reset()>reset</button> -->
                                     </div>
                                     <div class="d-flex mr-1 align-items-center">
-                                        <!-- <label for="fromDate" class="exampleInputEmail1 mr-1 text-muted ">From</label> -->
                                         <input style="height: 32px;" type="date" class="form-control mr-3" id="fromDate"
                                             max="<?php echo date('Y-m-d'); ?>">
                                     </div>
@@ -44,10 +42,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
-                                data-target="#modal-default"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add Telecallers</button> -->
                         </div>
-                        <!-- /.card-header -->
                         <div class="card-body">
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
@@ -114,7 +109,7 @@
                         {
                             data: null,
                             render: function(data, type, row) {
-                                return `<a href="${PANELURL}profile?id=${row.id}">${row.name}</a>`;
+                                return `<a href="${PANELURL}telecalling/profile?id=${row.id}">${row.name}</a>`;
                             }
                         },
                         {
@@ -150,7 +145,7 @@
                             data: null,
                             render: function(data, type, row) {
                                 return `<div class="d-flex justify-content-between">
-                                            <a href="profile/edit?id=${row.id}" title="edit" class="btn btn-warning btn-xs mr5">
+                                            <a href="lead/edit?id=${row.id}" title="edit" class="btn btn-warning btn-xs mr5">
                                                 <i class="fa fa-edit mr5"></i>
                                             </a>
                                             <button href="#" title="delete this row" onclick="deleteTelecalling(${row.id})" class="btn btn-danger btn-xs">
@@ -182,16 +177,9 @@
             'id': id
         }
         ajaxCallData(PANELURL + 'telecalling/changeStatus', postData, 'POST')
-            .then(function(result) {
-
-                jsonCheck = isJSON(result);
-                if (jsonCheck == true) {
-                    resp = JSON.parse(result);
-                    if (resp.success == 1) {
-                        notifyAlert(resp.message, 'success');
-                    } else {
-                        notifyAlert('You are not authorized!', 'danger');
-                    }
+            .then(function(resp) {
+                if (resp.success == 1) {
+                    notifyAlert(resp.message, 'success');
                 } else {
                     notifyAlert('You are not authorized!', 'danger');
                 }
@@ -207,43 +195,12 @@
             'id': id
         }
         ajaxCallData(PANELURL + 'telecalling/changeStatusToLeads', postData, 'POST')
-            .then(function(result) {
-                jsonCheck = isJSON(result);
-                if (jsonCheck == true) {
-                    resp = JSON.parse(result);
-                    if (resp.success == 1) {
-                        getData();
-                        notifyAlert(resp.message, 'success');
-                    } else {
-                        notifyAlert('You are not authorized!', 'danger');
-                    }
+            .then(function(resp) {
+                if (resp.success == 1) {
+                    getData();
+                    notifyAlert(resp.message, 'success');
                 } else {
-                    notifyAlert('We are sorry, You are not authorized!', 'danger');
-                }
-            })
-            .catch(function(err) {
-                console.log(err);
-            });
-    };
-
-    let reject = (id, status) => {
-        let postData = {
-            'id': id,
-            'status': status
-        }
-        ajaxCallData(PANELURL + 'telecalling/toReject', postData, 'POST')
-            .then(function(result) {
-                jsonCheck = isJSON(result);
-                if (jsonCheck == true) {
-                    resp = JSON.parse(result);
-                    if (resp.success == 1) {
-                        getData();
-                        notifyAlert(resp.message, 'success');
-                    } else {
-                        notifyAlert('You are not authorized!', 'danger');
-                    }
-                } else {
-                    notifyAlert('We are sorry, You are not authorized!', 'danger');
+                    notifyAlert('You are not authorized!', 'danger');
                 }
             })
             .catch(function(err) {
@@ -255,21 +212,14 @@
         let postData = {
             'id': id,
         }
-        ajaxCallData(PANELURL + 'telecalling/deleteData', postData, 'POST')
-            .then(function(result) {
-                jsonCheck = isJSON(result);
-                if (jsonCheck == true) {
-                    resp = JSON.parse(result);
-                    if (resp.success == 1) {
-                        getData();
-                        notifyAlert('Deleted successfully!', 'success');
-                    } else {
-                        notifyAlert('You are not authorized!', 'danger');
-                    }
+        ajaxCallData(PANELURL + 'telecalling/delete', postData, 'POST')
+            .then(function(resp) {
+                if (resp.success == 1) {
+                    getData();
+                    notifyAlert('Deleted successfully!', 'success');
                 } else {
                     notifyAlert('You are not authorized!', 'danger');
                 }
-
             })
             .catch(function(err) {
                 console.log(err);

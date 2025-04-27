@@ -81,7 +81,8 @@ class TrainerController extends Controller
         return view('addRecruits');
     }
 
-    public function viewProfile(){
+    public function viewProfile()
+    {
         return view('trainerProfile');
     }
 
@@ -121,15 +122,24 @@ class TrainerController extends Controller
             unset($data['date']);
 
             if ($request->hasFile('profileImage')) {
-                $data['profile_image'] = $request->file('profileImage')->store('uploads', 'public');
+                $file = $request->file('profileImage');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('uploads'), $filename);
+                $data['profile_image'] = 'uploads/' . $filename;
             }
 
             if ($request->hasFile('trainerDocumnt')) {
-                $data['doc'] = $request->file('trainerDocumnt')->store('trainerDoc', 'public');
+                $file = $request->file('trainerDocumnt');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('trainerDoc'), $filename);
+                $data['doc'] = 'trainerDoc/' . $filename;
             }
 
             if ($request->hasFile('trainerCv')) {
-                $data['cv_filecfdb7_file'] = $request->file('trainerCv')->store('TrainerCV', 'public');
+                $file = $request->file('trainerCv');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('trainerCv'), $filename);
+                $data['cv_filecfdb7_file'] = 'trainerCv/' . $filename;
             }
 
             $id = $request->trainerId;
@@ -210,7 +220,7 @@ class TrainerController extends Controller
             ]);
         }
 
-        return view('leads');
+        // return view('leads');
     }
 
     public function showTrainer(Request $request)
@@ -225,7 +235,7 @@ class TrainerController extends Controller
             ]);
         }
 
-        return view('leads');
+        // return view('leads');
     }
 
     public function isFeaturedTrainer(Request $request)
@@ -240,6 +250,6 @@ class TrainerController extends Controller
             ]);
         }
 
-        return view('leads');
+        // return view('leads');
     }
 }

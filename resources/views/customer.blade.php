@@ -126,7 +126,7 @@
                         {
                             data: null,
                             render: function(data, type, row) {
-                                return `<a href="${PANELURL}profile?id=${row.id}">${row.name}</a>`;
+                                return `<a href="${PANELURL}customer/profile?id=${row.id}">${row.name}</a>`;
                             }
                         },
                         {
@@ -157,7 +157,7 @@
                             data: null,
                             render: function(data, type, row) {
                                 return `<div class="d-flex justify-content-between px-3">
-                                            <a href="profile/edit?id=${row.id}" title="edit" class="btn btn-primary btn-xs mr5">
+                                            <a href="lead/edit?id=${row.id}" title="edit" class="btn btn-primary btn-xs mr5">
                                                 <i class="fa fa-edit"></i>
                                             </a>
                                             
@@ -198,18 +198,12 @@
             'id': id
         }
         ajaxCallData(PANELURL + 'customer/changeStatusToTelecalling', postData, 'POST')
-            .then(function(result) {
-                jsonCheck = isJSON(result);
-                if (jsonCheck == true) {
-                    resp = JSON.parse(result);
-                    if (resp.success == 1) {
-                        getData();
-                        notifyAlert(resp.message, 'success');
-                    } else {
-                        notifyAlert('You are not authorized!', 'danger');
-                    }
+            .then(function(resp) {
+                if (resp.success == 1) {
+                    getData();
+                    notifyAlert(resp.message, 'success');
                 } else {
-                    notifyAlert('We are sorry, You are not authorized!', 'danger');
+                    notifyAlert('You are not authorized!', 'danger');
                 }
             })
             .catch(function(err) {
@@ -222,20 +216,13 @@
             'id': id,
         }
         ajaxCallData(PANELURL + 'customer/delete', postData, 'POST')
-            .then(function(result) {
-                jsonCheck = isJSON(result);
-                if (jsonCheck == true) {
-                    resp = JSON.parse(result);
-                    if (resp.success == 1) {
-                        getData();
-                        notifyAlert('Deleted successfully!', 'success');
-                    } else {
-                        notifyAlert('You are not authorized!', 'danger');
-                    }
+            .then(function(resp) {
+                if (resp.success == 1) {
+                    getData();
+                    notifyAlert('Deleted successfully!', 'success');
                 } else {
                     notifyAlert('You are not authorized!', 'danger');
                 }
-
             })
             .catch(function(err) {
                 console.log(err);
@@ -247,20 +234,13 @@
             'id': id,
         }
         ajaxCallData(PANELURL + 'renewal/moveToRenew?type=lead', postData, 'POST')
-            .then(function(result) {
-                jsonCheck = isJSON(result);
-                if (jsonCheck == true) {
-                    resp = JSON.parse(result);
-                    if (resp.success == 1) {
-                        getData();
-                        notifyAlert('Data moved to Renewal Successfully!', 'success');
-                    } else {
-                        notifyAlert('You are not authorized!', 'danger');
-                    }
+            .then(function(resp) {
+                if (resp.success == 1) {
+                    getData();
+                    notifyAlert('Data moved to Renewal Successfully!', 'success');
                 } else {
                     notifyAlert('You are not authorized!', 'danger');
                 }
-
             })
             .catch(function(err) {
                 console.log(err);

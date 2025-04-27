@@ -111,8 +111,8 @@ class AdminController extends Controller
             if ($request->hasFile('profileImage')) {
                 $file = $request->file('profileImage');
                 $filename = time() . '_' . $file->getClientOriginalName();
-                $file->move(public_path('uploads'), $filename); // Save in public/uploads
-                $insert['profile_image'] = 'uploads/' . $filename; // For use with asset()
+                $file->move(public_path('uploads'), $filename);
+                $insert['profile_image'] = 'uploads/' . $filename;
             }
 
             DB::table('ci_admin')->insert($insert);

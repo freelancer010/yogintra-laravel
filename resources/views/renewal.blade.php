@@ -1,6 +1,5 @@
-<?php
-$this->load->view('includes/header');
-?>
+@extends('layouts.layout')
+@section('content')
 <div class="content-wrapper">
     <section class="content-header">
         <div class="container-fluid">
@@ -69,9 +68,6 @@ $this->load->view('includes/header');
         </div>
     </section>
 </div>
-<?php
-$this->load->view('includes/footer');
-?>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
@@ -107,7 +103,18 @@ $this->load->view('includes/footer');
     </div>
 </div>
 
+@endsection
+
+@section('scripts')
 <script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    const PANELURL = "{{ url('/') }}/";
+
     let filter = () => {
         let toDate = $("#toDate").val();
         let fromDate = $("#fromDate").val();
@@ -123,51 +130,50 @@ $this->load->view('includes/footer');
     let getData = (startDate = '', endDate = '') => {
         var apiUrl = PANELURL + 'renewal/view';
         ajaxCallData(apiUrl, {
-            startDate: startDate,
-            endDate: endDate,
-            type: "<?= $_GET['type'] ?>"
-        }, 'POST')
-            .then(function (result) {
-                resp = JSON.parse(result);
+                startDate: startDate,
+                endDate: endDate,
+                type: "<?= $_GET['type'] ?>"
+            }, 'POST')
+            .then(function(resp) {
                 if (resp.success == 1) {
                     response = resp.data;
                     let cols = [{
-                        data: null,
-                        render: function (data, type, row) {
-                            return row.id;
-                        }
-                    },
-                    {
-                        data: null,
-                        render: function (data, type, row) {
-                            return `<a href="${PANELURL}profile?id=${row.id}">${row.name}</a>`;
-                        }
-                    },
-                    {
-                        data: "number"
-                    },
-                    {
-                        data: "country"
-                    },
-                    {
-                        data: "state"
-                    },
-                    {
-                        data: "city"
-                    },
-                    {
-                        data: "class_type"
-                    },
-                    {
-                        data: "created_date"
-                    },
-                    {
-                        data: "package_end_date"
-                    },
-                    {
-                        data: null,
-                        render: function (data, type, row) {
-                            return `<div class="d-flex justify-content-between">
+                            data: null,
+                            render: function(data, type, row) {
+                                return row.id;
+                            }
+                        },
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                return `<a href="${PANELURL}lead/profile?id=${row.id}">${row.name}</a>`;
+                            }
+                        },
+                        {
+                            data: "number"
+                        },
+                        {
+                            data: "country"
+                        },
+                        {
+                            data: "state"
+                        },
+                        {
+                            data: "city"
+                        },
+                        {
+                            data: "class_type"
+                        },
+                        {
+                            data: "created_date"
+                        },
+                        {
+                            data: "package_end_date"
+                        },
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                return `<div class="d-flex justify-content-between">
                                             <button title="renew this row" onclick="renewData(${row.id},${row.full_payment})" class="btn btn-success btn-xs">
                                                 <i class="fas fa-retweet"></i>
                                             </button>
@@ -175,8 +181,8 @@ $this->load->view('includes/footer');
                                                 <i class="fas fa-forward"></i>
                                             </button>
                                         </div>`;
+                            }
                         }
-                    }
                     ]
                     createDataTable("example1", response, cols);
                     $('.buttons-pdf, .buttons-csv').css('height', '33px');
@@ -185,7 +191,7 @@ $this->load->view('includes/footer');
                     createDataTable("example1", '', '');
                 }
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 console.log(err);
             });
     };
@@ -197,27 +203,20 @@ $this->load->view('includes/footer');
             'id': id,
         }
         ajaxCallData(PANELURL + 'renewal/skipRenew?type=lead', postData, 'POST')
-            .then(function (result) {
-                jsonCheck = isJSON(result);
-                if (jsonCheck == true) {
-                    resp = JSON.parse(result);
-                    if (resp.success == 1) {
-                        getData();
-                        notifyAlert('Renewal Skipped Successfully!', 'success');
-                    } else {
-                        notifyAlert('You are not authorized!', 'danger');
-                    }
+            .then(function(resp) {
+                if (resp.success == 1) {
+                    getData();
+                    notifyAlert('Renewal Skipped Successfully!', 'success');
                 } else {
                     notifyAlert('You are not authorized!', 'danger');
                 }
-
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 console.log(err);
             });
     };
 
-    let renewData = (id,amount) => {
+    let renewData = (id, amount) => {
         $("#exampleModal").modal('show');
         $("#leadId").val(id);
         $("#leadPreviousAmount").val(amount);
@@ -225,32 +224,28 @@ $this->load->view('includes/footer');
 </script>
 
 <script>
-    $(document).ready(function () {
-        $('#renewalForm').on('submit', function (event) {
+    $(document).ready(function() {
+        $('#renewalForm').on('submit', function(event) {
             event.preventDefault();
 
             var serializedData = $(this).serialize();
 
-            ajaxCallData(PANELURL + 'renewal/editRenewal?type=lead', serializedData, 'POST')
-                .then(function (result) {
-                    jsonCheck = isJSON(result);
-                    if (jsonCheck == true) {
-                        resp = JSON.parse(result);
-                        if (resp.success == 1) {
-                            $("#exampleModal").modal('hide');
+            ajaxCallData(PANELURL + 'renewal/edit?type=lead', serializedData, 'POST')
+                .then(function(resp) {
+                    if (resp.success == 1) {
+                        $("#exampleModal").modal('hide');
 
-                            getData();
-                            notifyAlert('Data renewed successfully!', 'success');
-                        } else {
-                            notifyAlert('You are not authorized!', 'danger');
-                        }
+                        getData();
+                        notifyAlert('Data renewed successfully!', 'success');
                     } else {
                         notifyAlert('You are not authorized!', 'danger');
                     }
+
                 })
-                .catch(function (err) {
+                .catch(function(err) {
                     console.log(err);
                 });
         });
     });
 </script>
+@endsection

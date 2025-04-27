@@ -101,23 +101,6 @@
         getData();
     }
 
-    let addLead = () => {
-        ajaxCallData(PANELURL + 'lead/add', $("#addLeads").serialize(), 'POST')
-            .then(function(response) {
-                if (response.success == 1) {
-                    $('#addLeads')[0].reset();
-                    notifyAlert('success!', 'success');
-                    $('#modal-default').removeClass('show');
-                    $('#modal-default').css('display', 'none');
-                    $('.modal-backdrop').css('display', 'none');
-                }
-                getData();
-            })
-            .catch(function(err) {
-                // console.log(err);
-            });
-    }
-
     let getData = (startDate = '', endDate = '') => {
         var apiUrl = PANELURL + 'lead';
         ajaxCallData(apiUrl, {
@@ -136,7 +119,7 @@
                         {
                             data: null,
                             render: function(data, type, row) {
-                                return `<a href="${PANELURL}profile?id=${row.id}" style="${(row.read_status == 0) ? 'font-weight:600;' :''}">${row.name}</a>`;
+                                return `<a href="${PANELURL}lead/profile?id=${row.id}" style="${(row.read_status == 0) ? 'font-weight:600;' :''}">${row.name}</a>`;
                             }
                         },
                         {
@@ -194,7 +177,7 @@
                             data: null,
                             render: function(data, type, row) {
                                 return `<div class="d-flex justify-content-around    p-1">
-                                            <a href="profile/edit?id=${row.id}" title="edit" class="btn btn-warning btn-xs mr5">
+                                            <a href="lead/edit?id=${row.id}" title="edit" class="btn btn-warning btn-xs mr5">
                                                 <i class="fa fa-edit"></i>
                                             </a>
                                             <a href="#" title="Delete" onclick="deleteLead(${row.id})" class="btn btn-danger btn-xs">
@@ -213,6 +196,7 @@
                 // console.log(err);
             });
     };
+
     getData();
 
     var timer = null;
@@ -241,23 +225,15 @@
             'id': id
         }
         ajaxCallData(PANELURL + 'lead/changeStatus', postData, 'POST')
-            .then(function(result) {
-                jsonCheck = isJSON(result);
-                if (jsonCheck == true) {
-                    resp = JSON.parse(result);
-                    if (resp.success == 1) {
-                        getData();
-                        notifyAlert(resp.message, 'success');
-                    } else {
-                        notifyAlert('You are not authorized!', 'danger');
-                    }
+            .then(function(resp) {
+                if (resp.success == 1) {
+                    getData();
+                    notifyAlert(resp.message, 'success');
                 } else {
-                    notifyAlert('We are sorry, You are not authorized!', 'danger');
+                    notifyAlert('You are not authorized!', 'danger');
                 }
             })
-            .catch(function(err) {
-                // console.log(err);
-            });
+            .catch(function(err) {});
     };
 
     let deleteLead = (id) => {
@@ -265,57 +241,15 @@
             'id': id,
         }
         ajaxCallData(PANELURL + 'lead/delete', postData, 'POST')
-            .then(function(result) {
-                jsonCheck = isJSON(result);
-                if (jsonCheck == true) {
-                    resp = JSON.parse(result);
-                    if (resp.success == 1) {
-                        getData();
-                        notifyAlert('Deleted successfully!', 'success');
-                    } else {
-                        notifyAlert('You are not authorized!', 'danger');
-                    }
+            .then(function(resp) {
+                if (resp.success == 1) {
+                    getData();
+                    notifyAlert('Deleted successfully!', 'success');
                 } else {
                     notifyAlert('You are not authorized!', 'danger');
                 }
-
             })
-            .catch(function(err) {
-                // console.log(err);
-            });
-    };
-
-    let editLead = (id) => {
-        $('#modal-default').modal();
-        $('#modal-title').text('Edit Details');
-
-        let postData = {
-            'id': id,
-        }
-        ajaxCallData(PANELURL + 'lead/view', postData, 'POST')
-            .then(function(result) {
-                resp = JSON.parse(result);
-                if (resp.success == 1) {
-                    response = resp.data;
-                    $('#clientName').val(response.name);
-                    $('#clientNumber').val(response.number);
-                    $('#countryId').val(response.country);
-                    $('#stateId').val(response.state);
-                    $('#cityId').val(response.city);
-                    $('#clientEmail').val(response.email);
-                    $('#clientSource').val(response.source);
-                    $('#class_type').val(response.class_type);
-                    $('#clientCallFrom').val(response.call_from);
-                    $('#clientCallTo').val(response.call_to);
-                    $('#clientMessage').val(response.message);
-                } else {
-
-                }
-            })
-            .catch(function(err) {
-                // console.log(err);
-            });
-
+            .catch(function(err) {});
     };
 </script>
 @endsection

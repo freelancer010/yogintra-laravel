@@ -1,6 +1,5 @@
-<?php
-$this->load->view('includes/header');
-?>
+@extends('layouts.layout')
+@section('content')
 <style>
     .list-group-item {
         border: 0px solid rgba(0, 0, 0, .125);
@@ -46,9 +45,6 @@ $this->load->view('includes/header');
             </div>
     </section>
 </div>
-<?php
-$this->load->view('includes/footer');
-?>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
@@ -83,51 +79,61 @@ $this->load->view('includes/footer');
         </form>
     </div>
 </div>
+@endsection
 
+@section('scripts')
 <script>
-    let param = "<?= $_GET['id'] ?>";
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    const PANELURL = "{{ url('/') }}/";
+    const param = "{{ request('id') }}";
+    const source = "{{ request('source') }}";
 
     let changeReadStatus = () => {
-        var apiUrl = PANELURL + 'profile/changeReadStatus';
-        ajaxCallData(apiUrl, { 'id': param }, 'POST')
-            .then(function (result) {
-                response = JSON.parse(result);
-            })
-            .catch(function (err) {
+        var apiUrl = PANELURL + 'lead/changeReadStatus';
+        ajaxCallData(apiUrl, {
+                'id': param
+            }, 'POST')
+            .then(function(result) {})
+            .catch(function(err) {
                 console.log(err);
             });
     }
 
     let getData = () => {
-        var apiUrl = PANELURL + 'profile/view';
-        ajaxCallData(apiUrl, { 'id': param }, 'POST')
-            .then(function (result) {
-                response = JSON.parse(result);
+        var apiUrl = PANELURL + 'lead/profile';
+        ajaxCallData(apiUrl, {
+                'id': param
+            }, 'POST')
+            .then(function(response) {
                 resp = response.leads;
                 resptrainers = response.trainers;
                 resppaymentDetails = response.paymentDetails;
                 respRenewDetails = response.renew_details;
-                
-                <?php if(!empty($_GET['source']) && $_GET['source'] == 'alldata'){ ?>
-                        $('#back-btn').on('click', () => {
-                           redirect('allData');
-                        });
-                <?php }else{ ?>
-                $('#back-btn').on('click', () => {
-                    if (resp.status == 1) {
-                        redirect('lead');
-                    } else if (resp.status == 2) {
-                        redirect('telecalling');
-                    } else if (resp.status == 3) {
-                        redirect('customer');
-                    } else if (resp.status == 4) {
-                        redirect('rejected');
-                    } else if (resp.status == 5) {
-                        redirect('renewal');
-                    }
-                    // javascript:history.go(-1)
-                });
-                <?php }?>
+
+                if (source == 'alldata') {
+                    $('#back-btn').on('click', () => {
+                        redirect('allData');
+                    });
+                } else {
+                    $('#back-btn').on('click', () => {
+                        if (resp.status == 1) {
+                            redirect('lead');
+                        } else if (resp.status == 2) {
+                            redirect('telecalling');
+                        } else if (resp.status == 3) {
+                            redirect('customer');
+                        } else if (resp.status == 4) {
+                            redirect('rejected');
+                        } else if (resp.status == 5) {
+                            redirect('renewal');
+                        }
+                    });
+                }
                 $('.list-groups').append(`<li class="list-group-item col-lg-6 col-sm-12">
                                     <b>Name&nbsp;:</b><span class="mx-2">${resp.name}</span>
                                     <a class="float-right">
@@ -283,7 +289,7 @@ $this->load->view('includes/footer');
                                     </li>`
                         }` : ''}
                         
-                        ${resp.status != 5 ? `<a href="${PANELURL}profile/edit?id=${resp.id}" class="btn btn-primary btn-block mt-5"><b>Edit Profile</b></a>` : ''}
+                        ${resp.status != 5 ? `<a href="${PANELURL}lead/edit?id=${resp.id}" class="btn btn-primary btn-block mt-5"><b>Edit Profile</b></a>` : ''}
 
                         ${respRenewDetails.length > 0 ? `<li class="list-group-item col-lg-12 col-sm-12 text-center  mt-5 mb-5 bg-info p-3" id="renDetail">
                                                     <b style="border-bottom:1px solid">Package Renew History</b>
@@ -306,7 +312,7 @@ $this->load->view('includes/footer');
                                                     </div>
                                                 </li>`: ''}`);
 
-                $.each(resppaymentDetails, function () {
+                $.each(resppaymentDetails, function() {
                     newRowAdd =
                         `<div id = "row" class="row mt-2">
                             <div class="input-group col-6">
@@ -319,7 +325,7 @@ $this->load->view('includes/footer');
                     $('#oldinput').append(newRowAdd);
                 });
 
-                $.each(respRenewDetails, function () {
+                $.each(respRenewDetails, function() {
                     newRowAdd =
                         `<div id = "row" class="row mt-2">
                             <div class="col-2">
@@ -346,7 +352,7 @@ $this->load->view('includes/footer');
                     $('#renDetail').append(newRowAdd);
                 });
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 console.log(err);
             });
     };
@@ -365,31 +371,26 @@ $this->load->view('includes/footer');
         $("#renewalDate").val(row.renew_date);
     }
 
-    $(document).ready(function () {
-        $('#renewalForm').on('submit', function (event) {
+    $(document).ready(function() {
+        $('#renewalForm').on('submit', function(event) {
             event.preventDefault();
 
             var serializedData = $(this).serialize();
 
             ajaxCallData(PANELURL + 'renewal/editRenewal?type=lead', serializedData, 'POST')
-                .then(function (result) {
-                    jsonCheck = isJSON(result);
-                    if (jsonCheck == true) {
-                        resp = JSON.parse(result);
-                        if (resp.success == 1) {
-                            $("#exampleModal").modal('hide');
-                            notifyAlert('Data renewed successfully!', 'success');
-                            location.reload();
-                        } else {
-                            notifyAlert('You are not authorized!', 'danger');
-                        }
+                .then(function(resp) {
+                    if (resp.success == 1) {
+                        $("#exampleModal").modal('hide');
+                        notifyAlert('Data renewed successfully!', 'success');
+                        location.reload();
                     } else {
                         notifyAlert('You are not authorized!', 'danger');
                     }
                 })
-                .catch(function (err) {
+                .catch(function(err) {
                     console.log(err);
                 });
         });
     });
 </script>
+@endsection
