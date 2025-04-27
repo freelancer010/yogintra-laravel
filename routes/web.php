@@ -74,6 +74,9 @@ Route::post('/trainers/add', [TrainerController::class, 'savedata']);
 Route::get('/trainers/profile', [TrainerController::class, 'viewProfile']);
 Route::post('/trainers/profile', [TrainerController::class, 'getProfileDetails']);
 Route::post('/trainers/changeReadStatus', [TrainerController::class, 'changeReadStatus']);
+Route::get('/trainers/edit', [TrainerController::class, 'viewTrainerbyId']);
+Route::get('/trainers/edit', function () { return view('edit-trainer-profile'); })->name('trainers.edit');
+Route::post('/trainers/edit', [TrainerController::class, 'viewTrainerbyId']);
 
 // Events
 Route::get('/event', function () {

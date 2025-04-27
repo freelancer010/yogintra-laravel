@@ -198,8 +198,6 @@ class TrainerController extends Controller
             $trainer = DB::table('trainer')->where('id', $request->id)->first();
             return response()->json(['success' => 1, 'data' => $trainer]);
         }
-
-        return view('edit-trainer-profile');
     }
 
     public function changeReadStatus(Request $request)
