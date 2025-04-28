@@ -7,15 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-	public function __construct()
-	{
-		// $this->middleware(['auth', 'rbac.module']);
-
-		// if (request()->segment(3) != '') {
-		// 	$this->middleware('rbac.operation');
-		// }
-	}
-
 	public function index()
 	{
 		return view('dashboard');

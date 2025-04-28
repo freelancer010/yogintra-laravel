@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -21,7 +21,7 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $admin = Admin::with('role')->where('username', $request->username)->first();
+        $admin = DB::table('ci_admin')->where('username', $request->username)->first();
 
         if (!$admin || !Hash::check($request->password, $admin->password)) {
             return back()->with('error', 'Invalid credentials.');
@@ -35,11 +35,13 @@ class AuthController extends Controller
             return back()->with('error', 'Account is disabled by Admin!');
         }
 
+        $admin_role =  DB::table('ci_admin_roles')->where('admin_role_id', $admin->admin_role_id)->first();
+
         Session::put([
             'admin_id'      => $admin->admin_id,
             'username'      => $admin->username,
             'admin_role_id' => $admin->admin_role_id,
-            'admin_role'    => $admin->role->admin_role_title,
+            'admin_role'    => $admin_role->admin_role_title,
             'is_supper'     => $admin->is_supper,
             'profile_image' => $admin->profile_image,
             'fullName'      => $admin->firstname . ' ' . $admin->lastname,

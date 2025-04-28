@@ -36,7 +36,7 @@ class CommonController extends Controller
 
         $response = Http::post($this->apiUrl, [
             'type' => 'getCities',
-            'countryId' => '', // it doesn't seem to require this, per original JS
+            'countryId' => '',
             'stateId' => $stateId,
         ]);
 

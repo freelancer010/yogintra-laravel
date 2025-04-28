@@ -66,9 +66,8 @@ class LeadController extends Controller
                 $query->whereDate('created_date', '<=', $request->input('endDate'));
             }
 
-            $user = Auth::user();
-            $roleId = $user->role_id ?? null;
-            $username = $user->username ?? 'guest';
+            $roleId = session('admin_role_id') ?? null;
+            $username = session('username') ?? 'guest';
 
             if ($roleId == 3) {
                 $data1 = DB::table('leads')
@@ -379,9 +378,8 @@ class LeadController extends Controller
             $query->whereDate('created_date', '<=', $request->input('endDate'));
         }
 
-        $user = Auth::user();
-        $roleId = $user->role_id ?? null;
-        $username = $user->username ?? 'guest';
+        $roleId = session('admin_role_id') ?? null;
+        $username = session('username') ?? 'guest';
 
         $query->where('status', 2);
 
@@ -482,9 +480,8 @@ class LeadController extends Controller
     // customer
     public function getCustomer(Request $request)
     {
-        $user = Auth::user();
-        $roleId = $user->role_id ?? null;
-        $username = $user->username ?? 'guest';
+        $roleId = session('admin_role_id') ?? null;
+        $username = session('username') ?? 'guest';
 
         $query = DB::table('leads')
             ->leftJoin('trainer', 'trainer.id', '=', 'leads.trainer_id')

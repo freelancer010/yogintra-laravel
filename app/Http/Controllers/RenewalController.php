@@ -7,14 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class RenewalController extends Controller
 {
-    // public function __construct()
-    // {
-    //     // Custom auth_check() equivalent — optional
-    //     if (!session()->has('logged_in')) {
-    //         abort(403, 'Unauthorized');
-    //     }
-    // }
-
     public function index(Request $request)
     {
         $table = $request->query('type') === 'yoga' ? 'yoga-renewal' : 'renewal';

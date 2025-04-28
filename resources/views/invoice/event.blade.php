@@ -1,4 +1,4 @@
-<table style="width: 100%; !important">
+<table style=" width: 100%; !important">
     <tbody>
         <tr>
             <td class="">
@@ -64,7 +64,7 @@
     </tbody>
 </table>
 
-<br><br><br>
+<br /><br /><br />
 
 <div>
     <table style="table-layout: fixed; width: 100%;" cellpadding="5">
@@ -76,7 +76,7 @@
 									font-weight:800; 
 									background-color:#00000060; 
 									padding: 5px;">
-                    <strong>Center Name</strong>
+                    <strong>Event Name</strong>
                 </th>
                 <th width="25%" align="center"
                     style="border-bottom: 1px solid #00000080; 
@@ -84,7 +84,7 @@
 									font-weight:800; 
 									background-color:#00000060; 
 									padding: 5px;">
-                    <strong>Type</strong>
+                    <strong>Class Type</strong>
                 </th>
                 <th width="25%" align="center"
                     style="border-bottom: 1px solid #00000080; 
@@ -101,30 +101,54 @@
 									color:#fff; font-weight:800; 
 									background-color:#00000060; 
 									padding: 5px;">
-                    <strong>{{ $paymentType }}</strong>
+                    <strong>{{ $customerData['payment_type'] == 'Partition Payment' ? 'Partition Payment' : 'Full Pay' }}</strong>
                 </th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td style="border-top: 1px solid #eee; width:32%;padding: 5px;">{{ $customerData['event_name'] }}</td>
-                <td style="border-top: 1px solid #eee; width:16%;padding: 5px;">Yoga Center</td>
-                <td align="center" style=" width:30%; border-top: 1px solid #eee; padding: 5px;">₹{{ $customerData['package'] }}</td>
-                <td align="right" style="width:22%; border-top: 1px solid #eee; padding: 5px;">₹{{ $customer_amount }}</td>
+                <td style="border-top: 1px solid #eee; width:32%;padding: 5px;">
+                    {{ $customerData['event_name'] }}
+                </td>
+                <td style="border-top: 1px solid #eee; width:16%;padding: 5px;">
+                    {{ $customerData['class_type'] }}
+                </td>
+                <td align="center" style=" width:30%; border-top: 1px solid #eee; padding: 5px;">
+                    ₹{{ $customerData['package'] }}
+                </td>
+                <td align="right" style="width:22%; border-top: 1px solid #eee; padding: 5px;">
+                    ₹{{ $customerData['totalPayAmount'] }}
+                </td>
             </tr>
 
             <tr>
-                <td style="border-top: 1px solid #eee; width:24%;padding: 5px;"></td>
-                <td align="center" style=" width:30%; border-top: 1px solid #eee; padding: 5px;"></td>
-                <td align="center" style="width:22%; border-top: 1px solid #eee; padding: 5px;">+Other Charges</td>
-                <td align="right" style="width:25%; border-top: 1px solid #eee; padding: 5px;">₹{{ $otherCharges }}</td>
+                <td style="border-top: 1px solid #eee; width:24%;padding: 5px;">
+
+                </td>
+                <td align="center" style=" width:30%; border-top: 1px solid #eee; padding: 5px;">
+
+                </td>
+                <td align="center" style="width:22%; border-top: 1px solid #eee; padding: 5px;">
+                    +Other Charges
+                </td>
+                <td align="right" style="width:25%; border-top: 1px solid #eee; padding: 5px;">
+                    ₹{{ $customerData['totalPayAmount'] * 0.03 }}
+                </td>
             </tr>
 
             <tr>
-                <td style="border-top: 1px solid #eee; width:24%;padding: 5px;"></td>
-                <td align="center" style=" width:30%; border-top: 1px solid #eee; padding: 5px;"></td>
-                <td align="center" style="width:22%; border-top: 1px solid #eee; padding: 5px;">Paid Amount</td>
-                <td align="right" style="width:25%; border-top: 1px solid #eee; padding: 5px;">₹{{ $customer_amount }}</td>
+                <td style="border-top: 1px solid #eee; width:24%;padding: 5px;">
+
+                </td>
+                <td align="center" style=" width:30%; border-top: 1px solid #eee; padding: 5px;">
+
+                </td>
+                <td align="center" style="width:22%; border-top: 1px solid #eee; padding: 5px;">
+                    Paid Amount
+                </td>
+                <td align="right" style="width:25%; border-top: 1px solid #eee; padding: 5px;">
+                    ₹{{ ($customerData['totalPayAmount']) }}
+                </td>
             </tr>
         <tfoot>
             <tr>
@@ -132,13 +156,16 @@
                     style="border-bottom: 1px solid #00000080;  
 										color:#fff; font-weight:800; 
 										background-color:#00000060; 
-										padding: 5px;"></th>
-                <th align="center" style="border-bottom: 1px solid #00000080;  color:#fff; font-weight:800; background-color:#00000060; padding: 5px;"></th>
+										padding: 5px;">
+                </th>
+                <th align="center" style="border-bottom: 1px solid #00000080;  color:#fff; font-weight:800; background-color:#00000060; padding: 5px;">
+
+                </th>
                 <th align="center" style="border-bottom: 1px solid #00000080; border-right: 1px solid #fff; color:#fff; font-weight:800; background-color:#00000060; padding: 5px;">
                     <strong>Due Amount</strong>
                 </th>
                 <th align="right" style="border-bottom: 1px solid #00000080; border-right: 1px solid #fff; color:#fff; font-weight:800; background-color:#00000060; padding: 5px;">
-                    <strong>₹{{ $dueAmount }}</strong>
+                    <strong>₹{{ ((float)$customerData['package'] - (float)$customerData['totalPayAmount']) }}</strong>
                 </th>
             </tr>
         </tfoot>

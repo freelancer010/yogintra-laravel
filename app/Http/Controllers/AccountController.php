@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Auth;
 
 class AccountController extends Controller
 {
@@ -189,7 +187,7 @@ class AccountController extends Controller
     {
         if ($request->isMethod('post')) {
             $data = $request->only(['expenseType', 'expenseAmount', 'note', 'payee']);
-            $data['created_by'] = Auth::user()->name ?? 'Unknown';
+            $data['created_by'] = session('username') ?? 'Unknown';
             $data['created_date'] = $request->input('expenseDate');
 
             $result = DB::table('expense')->insert($data);
