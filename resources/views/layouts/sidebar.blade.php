@@ -27,24 +27,10 @@
 
                 @if(in_array($role, [1,2,3]))
                 <li class="nav-item">
-                    <a href="#" class="nav-link {{ request()->is('allData*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-plus"></i>
-                        <p>All Data<i class="right fas fa-angle-left"></i></p>
+                    <a href="{{ route('allData') }}" class="nav-link {{ request()->is('allData') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-arrow-right"></i>
+                        <p>All Data</p>
                     </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('allData') }}" class="nav-link">
-                                <i class="nav-icon fas fa-arrow-right"></i>
-                                <p>Data</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('rejected') }}" class="nav-link {{ request()->is('rejected') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-times-circle"></i>
-                                <p>Rejected Data</p>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
 
                 <li class="nav-item">
