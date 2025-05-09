@@ -118,7 +118,7 @@
                     { data: "id" },
                     { data: null,
                         render: function (data, type, row) {
-                            return `<a href="${PANELURL}trainers/view?id=${row.id}">${row.name}</a>`;
+                            return `<a href="${PANELURL}trainers/profile?id=${row.id}">${row.name}</a>`;
                         }
                     },
                     { data: "number" },
