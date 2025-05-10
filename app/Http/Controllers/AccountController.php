@@ -28,38 +28,36 @@ class AccountController extends Controller
 
             $whereClause = $where ? ' AND ' . implode(' AND ', $where) : '';
 
-            $query = "
-                SELECT * FROM (
-                    SELECT
-                        leads.name,
-                        leads.full_payment,
-                        leads.created_date,
-                        leads.payTotrainer,
-                        leads.class_type,
-                        trainer.name AS trainerName,
-                        trainer.created_date AS trainer_created_date,
-                        trainer.salary
-                    FROM leads
-                    LEFT JOIN trainer ON trainer.id = leads.trainer_id
-                    -- WHERE status IN (3)
-
-                    UNION ALL
-
-                    SELECT
-                        yoga.client_name AS name,
-                        yoga.totalPayAmount AS full_payment,
-                        yoga.created_date,
-                        0 AS payTotrainer,
-                        'Yoga Center' AS class_type,
-                        '' AS trainerName,
-                        '' AS trainer_created_date,
-                        0 AS salary
-                    FROM yoga
-                    -- WHERE status = 1
-                ) AS temp
-                WHERE 1=1 $whereClause
-                ORDER BY temp.created_date DESC
-            ";
+            $query = "SELECT * FROM 
+								(SELECT
+									`leads`.`name`,
+									`leads`.`full_payment`,
+									`leads`.`created_date`,
+									`leads`.`payTotrainer`,
+									`leads`.`class_type`,
+									`trainer`.`name` AS `trainerName`,
+									`trainer`.`created_date` AS `trainer_created_date`,
+									`trainer`.`salary`
+								FROM
+									`leads`
+								LEFT JOIN `trainer` ON `trainer`.`id` = `leads`.`trainer_id`
+								WHERE
+									`status` IN (3)
+							UNION ALL
+								SELECT
+									`yoga`.`client_name` as name,
+									`yoga`.`totalPayAmount` as full_payment,
+									`yoga`.`created_date`,
+									0 `payTotrainer`,
+									'Yoga Center' `class_type`,
+									'' `trainerName`,
+									'' `trainer_created_date`,
+									0 `salary`
+								FROM
+									`yoga`
+								WHERE
+									`status` = 1
+							) as temp WHERE 1=1 $whereClause ORDER BY temp.created_date DESC";
 
             $results = DB::select($query);
 
