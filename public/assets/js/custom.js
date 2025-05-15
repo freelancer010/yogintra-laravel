@@ -54,7 +54,7 @@ function getCountries() {
     $.post('/get-countries', {}, function (data) {
         $('.countries').html('<option value="">Select Country</option>');
         $.each(data.result, function (key, val) {
-            $('.countries').append(`<option value="${val.name}" data-id="${val.id}">${val.name}</option>`);
+            $('.countries').append(`<option value="${val.id}" data-id="${val.id}">${val.name}</option>`);
         });
     });
 }
@@ -66,7 +66,7 @@ function getStates(countryId) {
     $.post('/get-states', { countryId: countryId }, function (data) {
         $('.states').html('<option value="">Select State</option>');
         $.each(data.result, function (key, val) {
-            $('.states').append(`<option value="${val.name}" data-id="${val.id}">${val.name}</option>`);
+            $('.states').append(`<option value="${val.id}" data-id="${val.id}">${val.name}</option>`);
         });
     });
 }
@@ -77,7 +77,7 @@ function getCities(stateId) {
     $.post('/get-cities', { stateId: stateId }, function (data) {
         $('.cities').html('<option value="">Select City</option>');
         $.each(data.result, function (key, val) {
-            $('.cities').append(`<option value="${val.name}">${val.name}</option>`);
+            $('.cities').append(`<option value="${val.id}">${val.name}</option>`);
         });
     });
 }

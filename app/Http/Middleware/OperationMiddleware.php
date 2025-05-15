@@ -21,9 +21,13 @@ class OperationMiddleware
             return $next($request);
         }
 
-        $module = $request->segment(1);
-        $operation = $request->segment(2);
+        $module = $request->segment(1) ?? 'dashboard';
+        $operation = $request->segment(2) ?? 'access';
         $admin_role_id = session('admin_role_id');
+
+        // print_r($module);
+        // print_r($operation);
+        // die();
 
         $moduleAccess = DB::table('module_access')
             ->where([

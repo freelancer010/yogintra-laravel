@@ -29,17 +29,6 @@ Route::get('/cron/update-renew-data', [CronController::class, 'updateRenewData']
 Route::middleware([OperationMiddleware::class])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/counts', [DashboardController::class, 'counts'])->name('dashboard.counts');
-
-    Route::post('/get-countries', [CommonController::class, 'getCountries']);
-    Route::post('/get-states', [CommonController::class, 'getStates']);
-    Route::post('/get-cities', [CommonController::class, 'getCities']);
-
-    // All Data
-    Route::get('/allData', [DataController::class, 'viewAllData'])->name('allData');
-    Route::post('/allData', [DataController::class, 'allData']);
-    Route::get('/rejected', [DataController::class, 'rejectedView'])->name('rejected');
-    Route::post('/rejected', [DataController::class, 'rejected']);
 
     // Leads
     Route::get('/lead', function () {
@@ -77,14 +66,16 @@ Route::middleware([OperationMiddleware::class])->group(function () {
     Route::post('/customer/changeStatusToTelecalling', [LeadController::class, 'changeStatusToTelecalling']);
     Route::post('/customer/delete', [LeadController::class, 'deleteData']);
 
-    // Renewal
-    Route::get('/renewal', [RenewalController::class, 'index'])->name('customer.renewal');
-    Route::post('/renewal/view', [RenewalController::class, 'getRenewal']);
-    Route::get('/renewal/edit', [RenewalController::class, 'editRenewal']);
-    Route::post('/renewal/delete', [RenewalController::class, 'deleteData']);
-    Route::post('/renewal/skipRenew', [RenewalController::class, 'skipRenew']);
-    Route::post('/renewal/moveToRenew', [RenewalController::class, 'moveToRenew']);
 
+    // Users
+    Route::get('/admin/view', [AdminController::class, 'index'])->name('admin.view');
+    Route::get('/admin/add', [AdminController::class, 'add'])->name('admin.add');
+    Route::post('/admin/add', [AdminController::class, 'add'])->name('admin.add');
+    Route::get('/admin/list_data', [AdminController::class, 'listData'])->name('admin.listData');
+    Route::post('/admin/change_status', [AdminController::class, 'changeStatus'])->name('admin.changeStatus');
+    Route::get('/admin/delete/{id}', [AdminController::class, 'delete'])->name('admin.delete');
+    Route::get('/admin/edit/{id}', [AdminController::class, 'edit'])->name('admin.edit');
+    Route::post('/admin/edit/{id}', [AdminController::class, 'edit'])->name('admin.edit');
 
     // Trainers
     Route::get('/recruiter', function () {
@@ -125,6 +116,21 @@ Route::middleware([OperationMiddleware::class])->group(function () {
     Route::get('/event/profile/{id}', [EventController::class, 'getBookingProfile']);
     Route::post('/event/delete', [EventController::class, 'deleteData']);
 
+    // Accounts
+    Route::get('/ledger', [AccountController::class, 'ledger'])->name('ledger');
+    Route::post('/ledger', [AccountController::class, 'ledger'])->name('ledger');
+
+    Route::get('/summary', [AccountController::class, 'summary'])->name('summary');
+    Route::post('/summary', [AccountController::class, 'summary'])->name('summary');
+
+    Route::get('/office-expences', [AccountController::class, 'expenses'])->name('office-expences');
+    Route::post('/office-expences', [AccountController::class, 'expenses'])->name('office-expences');
+    Route::get('/office-expences/add', [AccountController::class, 'addExpenses'])->name('office-expences/add');
+    Route::post('/office-expences/add', [AccountController::class, 'addExpenses'])->name('office-expences/add');
+    Route::get('/office-expences/edit/{id}', [AccountController::class, 'editExpenses'])->name('office-expences/edit');
+    Route::post('/office-expences/edit/{id}', [AccountController::class, 'editExpenses'])->name('office-expences/edit');
+    Route::get('/office-expences/delete/{id}', [AccountController::class, 'deleteExpenses'])->name('office-expences.delete');
+
     // Yoga Center
     Route::get('/yoga-bookings', function () {
         return view('yoga');
@@ -137,32 +143,29 @@ Route::middleware([OperationMiddleware::class])->group(function () {
     Route::get('/yoga-bookings/profile/{id}', [YogaController::class, 'getBookingProfile']);
     Route::post('/yoga-bookings/delete', [YogaController::class, 'deleteData']);
 
-    // Accounts
-    Route::get('/ledger', [AccountController::class, 'ledger'])->name('ledger');
-    Route::post('/ledger', [AccountController::class, 'ledger'])->name('ledger');
-    Route::get('/summary', [AccountController::class, 'summary'])->name('summary');
-    Route::post('/summary', [AccountController::class, 'summary'])->name('summary');
-    Route::get('/office-expences', [AccountController::class, 'expenses'])->name('office-expences');
-    Route::post('/office-expences', [AccountController::class, 'expenses'])->name('office-expences');
-    Route::get('/office-expences/add', [AccountController::class, 'addExpenses'])->name('office-expences/add');
-    Route::post('/office-expences/add', [AccountController::class, 'addExpenses'])->name('office-expences/add');
-    Route::get('/office-expences/edit/{id}', [AccountController::class, 'editExpenses'])->name('office-expences/edit');
-    Route::post('/office-expences/edit/{id}', [AccountController::class, 'editExpenses'])->name('office-expences/edit');
-    Route::get('/office-expences/delete/{id}', [AccountController::class, 'deleteExpenses'])->name('office-expences.delete');
-
-    // Users
-    Route::get('/admin/view', [AdminController::class, 'index'])->name('admin.view');
-    Route::get('/admin/add', [AdminController::class, 'add'])->name('admin.add');
-    Route::post('/admin/add', [AdminController::class, 'add'])->name('admin.add');
-    Route::get('/admin/list_data', [AdminController::class, 'listData'])->name('admin.listData');
-    Route::post('/admin/change_status', [AdminController::class, 'changeStatus'])->name('admin.changeStatus');
-    Route::get('/admin/delete/{id}', [AdminController::class, 'delete'])->name('admin.delete');
-    Route::get('/admin/edit/{id}', [AdminController::class, 'edit'])->name('admin.edit');
-    Route::post('/admin/edit/{id}', [AdminController::class, 'edit'])->name('admin.edit');
-
-
-    // invoice
-    Route::get('/invoice/yoga', [InvoiceController::class, 'yoga']);
-    Route::get('/invoice/event', [InvoiceController::class, 'event']);
-    Route::get('/invoice', [InvoiceController::class, 'index']);
+    // Renewal
+    Route::get('/renewal', [RenewalController::class, 'index'])->name('customer.renewal');
+    Route::post('/renewal/view', [RenewalController::class, 'getRenewal']);
+    Route::get('/renewal/edit', [RenewalController::class, 'editRenewal']);
+    Route::post('/renewal/delete', [RenewalController::class, 'deleteData']);
+    Route::post('/renewal/skipRenew', [RenewalController::class, 'skipRenew']);
+    Route::post('/renewal/moveToRenew', [RenewalController::class, 'moveToRenew']);
 });
+
+
+Route::get('/counts', [DashboardController::class, 'counts'])->name('dashboard.counts');
+
+Route::post('/get-countries', [CommonController::class, 'getCountries']);
+Route::post('/get-states', [CommonController::class, 'getStates']);
+Route::post('/get-cities', [CommonController::class, 'getCities']);
+
+// All Data
+Route::get('/allData', [DataController::class, 'viewAllData'])->name('allData');
+Route::post('/allData', [DataController::class, 'allData']);
+Route::get('/rejected', [DataController::class, 'rejectedView'])->name('rejected');
+Route::post('/rejected', [DataController::class, 'rejected']);
+
+// invoice
+Route::get('/invoice/yoga', [InvoiceController::class, 'yoga']);
+Route::get('/invoice/event', [InvoiceController::class, 'event']);
+Route::get('/invoice', [InvoiceController::class, 'index']);

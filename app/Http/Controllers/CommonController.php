@@ -3,43 +3,35 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
 
 class CommonController extends Controller
 {
-    protected $apiUrl = 'https://geodata.phplift.net/api/index.php';
-
     public function getCountries()
     {
-        $response = Http::post($this->apiUrl, [
-            'type' => 'getCountries',
-        ]);
+        // Fetch countries from the database
+        $countries = DB::table('countries')->get();
 
-        return response()->json($response->json());
+        return response()->json(['result' => $countries]);
     }
 
     public function getStates(Request $request)
     {
         $countryId = $request->input('countryId');
 
-        $response = Http::post($this->apiUrl, [
-            'type' => 'getStates',
-            'countryId' => $countryId,
-        ]);
+        // Fetch states based on the country ID
+        $states = DB::table('states')->where('country_id', $countryId)->get();
 
-        return response()->json($response->json());
+        return response()->json(['result' => $states]);
     }
 
     public function getCities(Request $request)
     {
         $stateId = $request->input('stateId');
 
-        $response = Http::post($this->apiUrl, [
-            'type' => 'getCities',
-            'countryId' => '',
-            'stateId' => $stateId,
-        ]);
+        // Fetch cities based on the state ID
+        $cities = DB::table('cities')->where('state_id', $stateId)->get();
 
-        return response()->json($response->json());
+        return response()->json(['result' => $cities]);
     }
 }
