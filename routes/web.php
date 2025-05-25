@@ -40,6 +40,8 @@ Route::middleware([OperationMiddleware::class])->group(function () {
     Route::post('/allData', [DataController::class, 'allData']);
     Route::get('/rejected', [DataController::class, 'rejectedView'])->name('rejected');
     Route::post('/rejected', [DataController::class, 'rejected']);
+    Route::get('/profile', [LeadController::class, 'viewProfile']);
+    Route::get('/profile/edit', [LeadController::class, 'editProfile']);
 
     // Leads
     Route::get('/lead', function () {
