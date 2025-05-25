@@ -85,7 +85,6 @@ Route::middleware([OperationMiddleware::class])->group(function () {
     Route::post('/renewal/skipRenew', [RenewalController::class, 'skipRenew']);
     Route::post('/renewal/moveToRenew', [RenewalController::class, 'moveToRenew']);
 
-<<<<<<< HEAD
     // Users
     Route::get('/admin/view', [AdminController::class, 'index'])->name('admin.view');
     Route::get('/admin/add', [AdminController::class, 'add'])->name('admin.add');
@@ -95,8 +94,6 @@ Route::middleware([OperationMiddleware::class])->group(function () {
     Route::get('/admin/delete/{id}', [AdminController::class, 'delete'])->name('admin.delete');
     Route::get('/admin/edit/{id}', [AdminController::class, 'edit'])->name('admin.edit');
     Route::post('/admin/edit/{id}', [AdminController::class, 'edit']);
-=======
->>>>>>> 6994606 (Fix: Laravel route name conflict and updated index.php for hosting)
 
     // Trainers
     Route::get('/recruiter', function () {
@@ -137,7 +134,6 @@ Route::middleware([OperationMiddleware::class])->group(function () {
     Route::get('/event/profile/{id}', [EventController::class, 'getBookingProfile']);
     Route::post('/event/delete', [EventController::class, 'deleteData']);
 
-<<<<<<< HEAD
     // Accounts
     Route::get('/ledger', [AccountController::class, 'ledger'])->name('ledger');
     Route::post('/ledger', [AccountController::class, 'ledger']);
@@ -153,8 +149,6 @@ Route::middleware([OperationMiddleware::class])->group(function () {
     Route::post('/office-expences/edit/{id}', [AccountController::class, 'editExpenses']);
     Route::get('/office-expences/delete/{id}', [AccountController::class, 'deleteExpenses'])->name('office-expences.delete');
 
-=======
->>>>>>> 6994606 (Fix: Laravel route name conflict and updated index.php for hosting)
     // Yoga Center
     Route::get('/yoga-bookings', function () {
         return view('yoga');
