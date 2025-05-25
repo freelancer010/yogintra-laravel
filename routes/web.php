@@ -70,12 +70,12 @@ Route::middleware([OperationMiddleware::class])->group(function () {
     // Users
     Route::get('/admin/view', [AdminController::class, 'index'])->name('admin.view');
     Route::get('/admin/add', [AdminController::class, 'add'])->name('admin.add');
-    Route::post('/admin/add', [AdminController::class, 'add'])->name('admin.add');
+    Route::post('/admin/add', [AdminController::class, 'add']);
     Route::get('/admin/list_data', [AdminController::class, 'listData'])->name('admin.listData');
     Route::post('/admin/change_status', [AdminController::class, 'changeStatus'])->name('admin.changeStatus');
     Route::get('/admin/delete/{id}', [AdminController::class, 'delete'])->name('admin.delete');
     Route::get('/admin/edit/{id}', [AdminController::class, 'edit'])->name('admin.edit');
-    Route::post('/admin/edit/{id}', [AdminController::class, 'edit'])->name('admin.edit');
+    Route::post('/admin/edit/{id}', [AdminController::class, 'edit']);
 
     // Trainers
     Route::get('/recruiter', function () {
@@ -118,17 +118,17 @@ Route::middleware([OperationMiddleware::class])->group(function () {
 
     // Accounts
     Route::get('/ledger', [AccountController::class, 'ledger'])->name('ledger');
-    Route::post('/ledger', [AccountController::class, 'ledger'])->name('ledger');
+    Route::post('/ledger', [AccountController::class, 'ledger']);
 
     Route::get('/summary', [AccountController::class, 'summary'])->name('summary');
-    Route::post('/summary', [AccountController::class, 'summary'])->name('summary');
+    Route::post('/summary', [AccountController::class, 'summary']);
 
     Route::get('/office-expences', [AccountController::class, 'expenses'])->name('office-expences');
-    Route::post('/office-expences', [AccountController::class, 'expenses'])->name('office-expences');
-    Route::get('/office-expences/add', [AccountController::class, 'addExpenses'])->name('office-expences/add');
-    Route::post('/office-expences/add', [AccountController::class, 'addExpenses'])->name('office-expences/add');
-    Route::get('/office-expences/edit/{id}', [AccountController::class, 'editExpenses'])->name('office-expences/edit');
-    Route::post('/office-expences/edit/{id}', [AccountController::class, 'editExpenses'])->name('office-expences/edit');
+    Route::post('/office-expences', [AccountController::class, 'expenses']);
+    Route::get('/office-expences/add', [AccountController::class, 'addExpenses']);
+    Route::post('/office-expences/add', [AccountController::class, 'addExpenses']);
+    Route::get('/office-expences/edit/{id}', [AccountController::class, 'editExpenses']);
+    Route::post('/office-expences/edit/{id}', [AccountController::class, 'editExpenses']);
     Route::get('/office-expences/delete/{id}', [AccountController::class, 'deleteExpenses'])->name('office-expences.delete');
 
     // Yoga Center

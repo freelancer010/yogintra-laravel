@@ -71,7 +71,7 @@
       </div>
 
       <div class="card-body">
-        <form method="POST" action="{{ route('admin.add') }}" enctype="multipart/form-data" class="form-horizontal">
+        <form method="POST" action="{{ url('admin/add') }}" enctype="multipart/form-data" class="form-horizontal">
           @csrf
 
           <div class="container">

@@ -14,7 +14,7 @@
                     </ol>
                 </div>
             </div>
-        </div><!-- /.container-fluid -->
+        </div>
     </section>
 
     <!-- Main content -->
@@ -54,7 +54,7 @@
                                         <th style="width:5% !important;">Country</th>
                                         <th style="width:5% !important;">State</th>
                                         <th style="width:5% !important;">City</th>
-                                        <th style="width:10% !important;">Type Of Class</th>
+                                        <th style="width:10% !important;">Yoga Center</th>
                                         <th style="width:10% !important;">Date</th>
                                         <th style="width:5% !important;">Package Expire Date</th>
                                         <th style="width:5% !important;">Action</th>
@@ -68,6 +68,7 @@
         </div>
     </section>
 </div>
+
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
@@ -146,11 +147,11 @@
                         {
                             data: null,
                             render: function(data, type, row) {
-                                return `<a href="${PANELURL}lead/profile?id=${row.id}">${row.name}</a>`;
+                                return `<a href="${PANELURL}yoga-bookings/view?id=${row.id}">${row.client_name}</a>`;
                             }
                         },
                         {
-                            data: "number"
+                            data: "client_number"
                         },
                         {
                             data: "country"
@@ -162,19 +163,19 @@
                             data: "city"
                         },
                         {
-                            data: "class_type"
+                            data: "event_name"
                         },
                         {
                             data: "created_date"
                         },
                         {
-                            data: "package_end_date"
+                            data: "e_date"
                         },
                         {
                             data: null,
                             render: function(data, type, row) {
                                 return `<div class="d-flex justify-content-between">
-                                            <button title="renew this row" onclick="renewData(${row.id},${row.full_payment})" class="btn btn-success btn-xs">
+                                            <button title="renew this row" onclick="renewData(${row.id},${row.totalPayAmount})" class="btn btn-success btn-xs">
                                                 <i class="fas fa-retweet"></i>
                                             </button>
                                             <button href="#" title="skip this row" onclick="skipRenew(${row.id})" class="btn btn-danger btn-xs">
@@ -202,7 +203,7 @@
         let postData = {
             'id': id,
         }
-        ajaxCallData(PANELURL + 'renewal/skipRenew?type=lead', postData, 'POST')
+        ajaxCallData(PANELURL + 'renewal/skipRenew?type=yoga', postData, 'POST')
             .then(function(resp) {
                 if (resp.success == 1) {
                     getData();
@@ -230,7 +231,7 @@
 
             var serializedData = $(this).serialize();
 
-            ajaxCallData(PANELURL + 'renewal/edit?type=lead', serializedData, 'POST')
+            ajaxCallData(PANELURL + 'renewal/editRenewal?type=yoga', serializedData, 'POST')
                 .then(function(resp) {
                     if (resp.success == 1) {
                         $("#exampleModal").modal('hide');
@@ -240,7 +241,6 @@
                     } else {
                         notifyAlert('You are not authorized!', 'danger');
                     }
-
                 })
                 .catch(function(err) {
                     console.log(err);

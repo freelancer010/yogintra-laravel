@@ -71,7 +71,7 @@
       </div>
 
       <div class="card-body">
-        <form action="{{ route('admin.edit', $admin->admin_id) }}" method="POST" enctype="multipart/form-data" class="form-horizontal">
+        <form action="{{ url('admin/edit/' . $admin->admin_id) }}" method="POST" enctype="multipart/form-data" class="form-horizontal">
           @csrf
           @method('POST')
 

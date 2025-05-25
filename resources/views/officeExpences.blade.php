@@ -24,7 +24,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header yogintra align-items-center d-flex justify-content-between">
-                            <a href="{{ route('office-expences/add') }}" class="btn btn-sm btn-primary">
+                            <a href="{{ url('office-expences/add') }}" class="btn btn-sm btn-primary">
                                 <i class="fas fa-plus"></i>&nbsp;&nbsp;Add Expenses
                             </a>
                             <div class="row align-items-center" style="margin-bottom:-2px">
