@@ -26,14 +26,11 @@ Route::get('/access_denied/index/{back?}', function ($back = null) {
 
 Route::get('/cron/update-renew-data', [CronController::class, 'updateRenewData']);
 
-Route::middleware([OperationMiddleware::class])->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/counts', [DashboardController::class, 'counts'])->name('dashboard.counts');
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/counts', [DashboardController::class, 'counts'])->name('dashboard.counts');
 
-    Route::post('/get-countries', [CommonController::class, 'getCountries']);
-    Route::post('/get-states', [CommonController::class, 'getStates']);
-    Route::post('/get-cities', [CommonController::class, 'getCities']);
+Route::middleware([OperationMiddleware::class])->group(function () {
 
     // All Data
     Route::get('/allData', [DataController::class, 'viewAllData'])->name('allData');
@@ -82,7 +79,7 @@ Route::middleware([OperationMiddleware::class])->group(function () {
     // Renewal
     Route::get('/renewal', [RenewalController::class, 'index'])->name('customer.renewal');
     Route::post('/renewal/view', [RenewalController::class, 'getRenewal']);
-    Route::get('/renewal/edit', [RenewalController::class, 'editRenewal']);
+    Route::post('/renewal/edit', [RenewalController::class, 'editRenewal']);
     Route::post('/renewal/delete', [RenewalController::class, 'deleteData']);
     Route::post('/renewal/skipRenew', [RenewalController::class, 'skipRenew']);
     Route::post('/renewal/moveToRenew', [RenewalController::class, 'moveToRenew']);
@@ -192,3 +189,7 @@ Route::middleware([OperationMiddleware::class])->group(function () {
     Route::get('/invoice/event', [InvoiceController::class, 'event']);
     Route::get('/invoice', [InvoiceController::class, 'index']);
 });
+
+Route::post('/get-countries', [CommonController::class, 'getCountries']);
+Route::post('/get-states', [CommonController::class, 'getStates']);
+Route::post('/get-cities', [CommonController::class, 'getCities']);
