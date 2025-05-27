@@ -22,8 +22,7 @@
                     </a>
                 </li>
 
-                <!-- @php $role = session('admin_role_id'); @endphp -->
-                @php $role = 1; @endphp
+                @php $role = session('admin_role_id'); @endphp
 
                 @if(in_array($role, [1,2,3]))
                 <li class="nav-item">

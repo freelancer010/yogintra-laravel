@@ -208,11 +208,11 @@
       });
     });
 
-  setTimeout(() => {
-    let leadsCount = $('#leads').text();
-    if (leadsCount === '') {
-      window.location = "{{ url('logout') }}";
-    }
-  }, 1500);
+  // setTimeout(() => {
+  //   let leadsCount = $('#leads').text();
+  //   if (leadsCount === '') {
+  //     window.location = "{{ url('logout') }}";
+  //   }
+  // }, 1500);
 </script>
 @endsection

@@ -13,6 +13,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RenewalController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Middleware\SessionMiddleware;
 use App\Http\Middleware\OperationMiddleware;
 use App\Http\Controllers\CronController;
 
@@ -26,9 +27,15 @@ Route::get('/access_denied/index/{back?}', function ($back = null) {
 
 Route::get('/cron/update-renew-data', [CronController::class, 'updateRenewData']);
 
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/counts', [DashboardController::class, 'counts'])->name('dashboard.counts');
+Route::middleware([SessionMiddleware::class])->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/counts', [DashboardController::class, 'counts'])->name('dashboard.counts');
+
+    Route::post('/get-countries', [CommonController::class, 'getCountries']);
+    Route::post('/get-states', [CommonController::class, 'getStates']);
+    Route::post('/get-cities', [CommonController::class, 'getCities']);
+});
 
 Route::middleware([OperationMiddleware::class])->group(function () {
 
@@ -189,7 +196,3 @@ Route::middleware([OperationMiddleware::class])->group(function () {
     Route::get('/invoice/event', [InvoiceController::class, 'event']);
     Route::get('/invoice', [InvoiceController::class, 'index']);
 });
-
-Route::post('/get-countries', [CommonController::class, 'getCountries']);
-Route::post('/get-states', [CommonController::class, 'getStates']);
-Route::post('/get-cities', [CommonController::class, 'getCities']);

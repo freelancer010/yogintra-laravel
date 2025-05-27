@@ -115,25 +115,28 @@
                 resppaymentDetails = response.paymentDetails;
                 respRenewDetails = response.renew_details;
 
-                if (source == 'alldata') {
-                    $('#back-btn').on('click', () => {
-                        redirect('allData');
-                    });
-                } else {
-                    $('#back-btn').on('click', () => {
+                $('#back-btn').on('click', () => {
+                    let redirectTo = '';
+
+                    if (source === 'alldata') {
+                        redirectTo = 'allData';
+                    } else {
                         if (resp.status == 1) {
-                            redirect('lead');
+                            redirectTo = 'lead';
                         } else if (resp.status == 2) {
-                            redirect('telecalling');
+                            redirectTo = 'telecalling';
                         } else if (resp.status == 3) {
-                            redirect('customer');
+                            redirectTo = 'customer';
                         } else if (resp.status == 4) {
-                            redirect('rejected');
+                            redirectTo = 'rejected';
                         } else if (resp.status == 5) {
-                            redirect('renewal');
+                            redirectTo = 'renewal';
                         }
-                    });
-                }
+                    }
+
+                    window.location.href = `${PANELURL+redirectTo}`;
+                });
+
                 $('.list-groups').append(`<li class="list-group-item col-lg-6 col-sm-12">
                                     <b>Name&nbsp;:</b><span class="mx-2">${resp.name}</span>
                                     <a class="float-right">

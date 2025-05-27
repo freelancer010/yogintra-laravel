@@ -418,25 +418,27 @@
                     }
                 }
 
-                if (source == 'alldata') {
-                    $('#back-btn').on('click', () => {
-                        redirect('allData');
-                    });
-                } else {
-                    $('#back-btn').on('click', () => {
-                        if (response.status == 1) {
-                            redirect('lead');
-                        } else if (response.status == 2) {
-                            redirect('telecalling');
-                        } else if (response.status == 3) {
-                            redirect('customer');
-                        } else if (response.status == 4) {
-                            redirect('rejected');
-                        } else if (response.status == 5) {
-                            redirect('renewal');
+                $('#back-btn').on('click', () => {
+                    let redirectTo = '';
+
+                    if (source === 'alldata') {
+                        redirectTo = 'allData';
+                    } else {
+                        if (resp.status == 1) {
+                            redirectTo = 'lead';
+                        } else if (resp.status == 2) {
+                            redirectTo = 'telecalling';
+                        } else if (resp.status == 3) {
+                            redirectTo = 'customer';
+                        } else if (resp.status == 4) {
+                            redirectTo = 'rejected';
+                        } else if (resp.status == 5) {
+                            redirectTo = 'renewal';
                         }
-                    });
-                }
+                    }
+
+                    window.location.href = `${PANELURL+redirectTo}`;
+                });
             })
             .catch(function(err) {
                 console.log(err);

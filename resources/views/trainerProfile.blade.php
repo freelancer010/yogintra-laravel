@@ -242,7 +242,7 @@
                     $('#trDoc').css('display', 'none');
                     $('#profile').css('display', 'none');
                     $('#back-btn').on('click', () => {
-                        window.location.replace(PANELURL + '/recruiter')
+                        window.location.replace(PANELURL + 'recruiter')
                     });
                 } else {
                     $('#back-btn').on('click', () => {
