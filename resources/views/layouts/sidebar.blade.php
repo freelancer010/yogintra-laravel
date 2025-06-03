@@ -118,7 +118,7 @@
                 </li>
                 @endif
 
-                @if(in_array($role, [1,2,5]))
+                @if(in_array($role, [1,2]))
                 <li class="nav-item">
                     <a href="{{ route('event') }}" class="nav-link">
                         <i class="nav-icon fas fa-calendar"></i>
@@ -146,7 +146,9 @@
                         </li>
                     </ul>
                 </li>
-
+                @endif
+                
+                @if(in_array($role, [1,2,5]))
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-copy"></i>
