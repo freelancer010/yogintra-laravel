@@ -57,21 +57,29 @@
 
                                     <div class="form-group col-lg-6 col-sm-12">
                                         <label>Country</label>
-                                        <select class="form-control countries" id="countryId" name="country">
+                                        <input required type="text" class="form-control" id="country"
+                                            name="country" placeholder="Enter country">
+
+                                        <!-- <select class="form-control countries" id="countryId" name="country">
                                             <option value="selected" selected>Select your Country</option>
-                                        </select>
+                                        </select> -->
                                     </div>
                                     <div class="form-group col-lg-6 col-sm-12">
                                         <label>States</label>
-                                        <select class="form-control states" id="stateId" name="state">
+                                        <input required type="text" class="form-control" id="state" name="state" placeholder="Enter state">
+
+
+                                        <!-- <select class="form-control states" id="stateId" name="state">
                                             <option value="selected" selected>Select your Country First</option>
-                                        </select>
+                                        </select> -->
                                     </div>
                                     <div class="form-group col-lg-6 col-sm-12">
                                         <label>City</label>
-                                        <select class="form-control cities" id="cityId" name="city">
+                                        <input required type="text" class="form-control" id="city" name="city" placeholder="Enter city">
+
+                                        <!-- <select class="form-control cities" id="cityId" name="city">
                                             <option value="selected" selected>Select your state first</option>
-                                        </select>
+                                        </select> -->
                                     </div>
 
                                     <div class="form-group col-lg-6 col-sm-12">
