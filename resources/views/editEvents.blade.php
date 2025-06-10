@@ -93,7 +93,7 @@
 
                                     <div class="form-group col-lg-6 col-sm-12" id="packageEd">
                                         <label for="package">Package</label>
-                                        <input required type="text" onKeyup="calculateP()" class="form-control editInputBox customEditInputBox" id="package" name="package"
+                                        <input required type="text" class="form-control editInputBox customEditInputBox" id="package" name="package"
                                             placeholder="Enter your package">
                                     </div>
 
@@ -241,12 +241,6 @@
             });
     };
 
-    const calculateP = () => {
-        const packageVal = parseFloat($('#package').val()) || 0;
-        const quotation = parseFloat($('#quotation').val()) || 0;
-        $('#payableAmount').val(packageVal * quotation);
-    };
-
     editLead(param);
 
     let editEvent = () => {
@@ -302,7 +296,7 @@
     })
 
     let checkPayableAmount = () => {
-        let payAmnt = parseInt($('#payableAmount').val());
+        let payAmnt = parseInt($('#package').val());
         let fullAmnt = parseInt($('#fullPayType').val());
 
         if (fullAmnt > payAmnt) {
