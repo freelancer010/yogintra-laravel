@@ -170,7 +170,7 @@
     };
 
     $(document).ready(() => {
-        $('#back-btn').click(() => window.location.href = '{{ route("getYoga") }}');
+        $('#back-btn').click(() => window.location.href = '{{ url("yoga-bookings") }}');
 
         $('#renewalForm').submit(function(e) {
             e.preventDefault();

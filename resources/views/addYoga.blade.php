@@ -80,7 +80,7 @@
                                     </div>
                                     <div class="form-group col-lg-6 col-sm-12">
                                         <label>Package</label>
-                                        <input required type="text" class="form-control" id="package" name="package" placeholder="Enter your package">
+                                        <input required type="number" class="form-control" id="package" name="package" placeholder="Enter your package">
                                     </div>
 
                                     <!-- Payment Type -->
@@ -186,10 +186,8 @@
 
     // Payable amount check
     const checkPayableAmount = () => {
-        const payableAmount = parseInt($('#payableAmount').val()) || 0;
+        const payableAmount = parseInt($('#package').val()) || 0;
         const fullPayment = parseInt($('#fullPayType').val()) || 0;
-        console.log('payableAmount', payableAmount);
-        console.log('fullPayment', fullPayment);
 
         if (fullPayment > payableAmount) {
             $('#save').prop('disabled', true);

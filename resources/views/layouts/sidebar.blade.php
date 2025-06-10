@@ -16,7 +16,8 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
                 <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}">
+                    <a href="{{ route('dashboard') }}"
+                        class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>Dashboard</p>
                     </a>
@@ -28,8 +29,24 @@
                 <li class="nav-item">
                     <a href="{{ route('allData') }}" class="nav-link {{ request()->is('allData') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-arrow-right"></i>
-                        <p>All Data</p>
+                        <p>All Data<i class="right fas fa-angle-left"></i></p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('allData') }}"
+                                class="nav-link  {{ request()->is('allData') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-arrow-right"></i>
+                                <p>Data</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('rejected') }}"
+                                class="nav-link  {{ request()->is('rejected') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-times-circle"></i>
+                                <p>Rejected Data</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
 
                 <li class="nav-item">
@@ -40,7 +57,8 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('telecalling') }}" class="nav-link  {{ request()->is('telecalling') ? 'active' : '' }}">
+                    <a href="{{ route('telecalling') }}"
+                        class="nav-link  {{ request()->is('telecalling') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-headset"></i>
                         <p>
                             Telecalling
@@ -147,7 +165,7 @@
                     </ul>
                 </li>
                 @endif
-                
+
                 @if(in_array($role, [1,2,5]))
                 <li class="nav-item">
                     <a href="#" class="nav-link">

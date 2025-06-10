@@ -42,6 +42,8 @@ Route::middleware([OperationMiddleware::class])->group(function () {
     // All Data
     Route::get('/allData', [DataController::class, 'viewAllData'])->name('allData');
     Route::post('/allData', [DataController::class, 'allData']);
+    Route::post('/allData/restore', [DataController::class, 'restore']);
+    
     Route::get('/rejected', [DataController::class, 'rejectedView'])->name('rejected');
     Route::post('/rejected', [DataController::class, 'rejected']);
     Route::get('/profile', [LeadController::class, 'viewProfile']);
@@ -77,6 +79,7 @@ Route::middleware([OperationMiddleware::class])->group(function () {
     Route::get('/customer', function () {
         return view('customer');
     })->name('customer');
+    Route::match(['get', 'post'], '/customer/add', [LeadController::class, 'addCustomer']);
     Route::post('/customer/view', [LeadController::class, 'getCustomer'])->name('getCustomer');
     Route::get('/customer/profile', [LeadController::class, 'viewProfile']);
     Route::post('/customer/profile', [LeadController::class, 'getProfile']);

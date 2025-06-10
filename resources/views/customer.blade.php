@@ -23,7 +23,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header yogintra align-items-center d-flex justify-content-between">
-                            <a href="addCustomer?id=3" class="btn btn-sm btn-primary"><i
+                            <a href="/customer/add" class="btn btn-sm btn-primary"><i
                                     class="fas fa-plus"></i>&nbsp;&nbsp;Add
                                 Customers</a>&nbsp; &nbsp;
                             <div class="row align-items-center ml-auto" style="margin-bottom:-2px">
@@ -67,7 +67,6 @@
                                         <th style="width:5% !important;">T Payment</th>
                                         <th style="width:5% !important;">T Date</th>
                                         <th style="width:8% !important;">Action</th>
-                                        <!-- <th style="text-align:center">Invoice</th> -->
                                     </tr>
                                 </thead>
                             </table>

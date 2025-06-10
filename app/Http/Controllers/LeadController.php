@@ -530,6 +530,101 @@ class LeadController extends Controller
         ]);
     }
 
+    public function addCustomer(Request $request)
+    {
+        if ($request->has('name')) {
+            $data = [
+                'name'           => $request->input('name'),
+                'number'         => $request->input('number'),
+                'country'        => $request->input('country'),
+                'state'          => $request->input('state'),
+                'city'           => $request->input('city'),
+                'source'         => $request->input('lead-source'),
+                'email'          => $request->input('email'),
+                'class_type'     => $request->input('class'),
+                'call_from'      => $request->input('call-from'),
+                'call_to'        => $request->input('call-to'),
+                'message'        => $request->input('client-message'),
+                'created_date'   => $request->input('date'),
+                'package'        => $request->input('package') ?? '0',
+                'quotation'      => $request->input('quote'),
+                'dempay'         => $request->input('demoPay'),
+                'attempt1'       => '1',
+                'attendeeName'   => $request->input('attendeeName'),
+                'trainer_id'     => $request->input('trainer'),
+                'created_by'     => session('username'),
+                'payTotrainer'   => $request->input('trainerPayment') ?? '0',
+                'trainerPayDate' => $request->input('trainerPayDate'),
+                'demDate'        => str_replace('T', ' ', $request->input('demDate')),
+                'totalPayDate'   => $request->input('totalPayDate') ?? '',
+                'payableAmount'  => $request->input('payableAmount') ?? '',
+                'payment_type'   => $request->input('payment_type'),
+                'status'         => 3,
+            ];
+
+            if ($request->filled('packageEndDate')) {
+                $data['package_end_date'] = $request->input('packageEndDate');
+            }
+
+            if ($request->input('payment_type') === 'Full Payment') {
+                $data['full_payment'] = $request->input('totalPayAmount');
+                $data['totalPayDate'] = str_replace('T', ' ', $request->input('totalPayDate'));
+            } elseif ($request->input('payment_type') === 'Partition Payment') {
+                $data['full_payment'] = array_sum($request->input('fullPayment', []));
+            }
+
+            try {
+                DB::beginTransaction();
+
+                $leadId = DB::table('leads')->insertGetId($data);
+
+                if ($request->input('payment_type') === 'Partition Payment') {
+                    $fullPayments = $request->input('fullPayment', []);
+                    $paymentDates = $request->input('fullPaymentDate', []);
+                    $batchInsert = [];
+
+                    foreach ($fullPayments as $key => $amount) {
+                        if ($amount > 0) {
+                            $batchInsert[] = [
+                                'leadId'       => $leadId,
+                                'amount'       => $amount,
+                                'created_date' => $paymentDates[$key] ?? now(),
+                                'created_by'   => session('username'),
+                                'status'       => 1,
+                                'type'         => 'lead',
+                            ];
+                        }
+                    }
+
+                    if (count($batchInsert)) {
+                        DB::table('paymentdata')
+                            ->where(['leadId' => $leadId, 'type' => 'lead'])
+                            ->update(['status' => 0]);
+
+                        DB::table('paymentdata')->insert($batchInsert);
+                    }
+                }
+
+                DB::commit();
+
+                return response()->json([
+                    'success' => 1,
+                    'message' => 'Customer Added Successfully',
+                ]);
+            } catch (\Exception $e) {
+                DB::rollBack();
+
+                return response()->json([
+                    'success' => 0,
+                    'message' => 'Unable to add customer!',
+                    'error'   => $e->getMessage(),
+                ]);
+            }
+        }
+
+        return view('addCustomer');
+    }
+
     public function changeStatusToTelecalling(Request $request)
     {
         $id = $request->input('id');

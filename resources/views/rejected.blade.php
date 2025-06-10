@@ -131,20 +131,14 @@
         let postData = {
             'id': id
         }
-        ajaxCallData(PANELURL + 'AllData/restrore', postData, 'POST')
-            .then(function(result) {
-                jsonCheck = isJSON(result);
-                if (jsonCheck == true) {
-                    resp = JSON.parse(result);
+        ajaxCallData(PANELURL + 'allData/restore', postData, 'POST')
+            .then(function(resp) {
                     if (resp.success == 1) {
                         getData();
                         notifyAlert(resp.message, 'success');
                     } else {
                         notifyAlert('You are not authorized!', 'danger');
                     }
-                } else {
-                    notifyAlert('We are sorry, You are not authorized!', 'danger');
-                }
             })
             .catch(function(err) {
                 console.log(err);
@@ -155,21 +149,14 @@
         let postData = {
             'id': id,
         }
-        ajaxCallData(PANELURL + 'telecalling/deleteData', postData, 'POST')
-            .then(function(result) {
-                jsonCheck = isJSON(result);
-                if (jsonCheck == true) {
-                    resp = JSON.parse(result);
-                    if (resp.success == 1) {
-                        getData();
-                        notifyAlert('Deleted successfully!', 'success');
-                    } else {
-                        notifyAlert('You are not authorized!', 'danger');
-                    }
+        ajaxCallData(PANELURL + 'lead/delete', postData, 'POST')
+            .then(function(resp) {
+                if (resp.success == 1) {
+                    getData();
+                    notifyAlert('Deleted successfully!', 'success');
                 } else {
                     notifyAlert('You are not authorized!', 'danger');
                 }
-
             })
             .catch(function(err) {
                 console.log(err);
