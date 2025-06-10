@@ -207,7 +207,7 @@
                         </tr>
                         <tr>
                             <td>
-                                Branch name:-
+                                Branch:-
                             </td>
                             <td>
                                 DOMBIVALI-EAST
