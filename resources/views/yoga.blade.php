@@ -186,18 +186,12 @@
                 'id': id
             }
             ajaxCallData(PANELURL + 'customer/changeStatusToTelecallingFromYogaCenter', postData, 'POST')
-                .then(function(result) {
-                    jsonCheck = isJSON(result);
-                    if (jsonCheck == true) {
-                        resp = JSON.parse(result);
-                        if (resp.success == 1) {
-                            getData();
-                            notifyAlert(resp.message, 'success');
-                        } else {
-                            notifyAlert('You are not authorized!', 'danger');
-                        }
+                .then(function(resp) {
+                    if (resp.success == 1) {
+                        getData();
+                        notifyAlert(resp.message, 'success');
                     } else {
-                        notifyAlert('We are sorry, You are not authorized!', 'danger');
+                        notifyAlert('You are not authorized!', 'danger');
                     }
                 })
                 .catch(function(err) {
@@ -231,20 +225,13 @@
             'id': id,
         }
         ajaxCallData(PANELURL + 'renewal/moveToRenew?type=yoga', postData, 'POST')
-            .then(function(result) {
-                jsonCheck = isJSON(result);
-                if (jsonCheck == true) {
-                    resp = JSON.parse(result);
-                    if (resp.success == 1) {
-                        getData();
-                        notifyAlert('Data moved to Renewal Successfully!', 'success');
-                    } else {
-                        notifyAlert('You are not authorized!', 'danger');
-                    }
+            .then(function(resp) {
+                if (resp.success == 1) {
+                    getData();
+                    notifyAlert('Data moved to Renewal Successfully!', 'success');
                 } else {
                     notifyAlert('You are not authorized!', 'danger');
                 }
-
             })
             .catch(function(err) {
                 console.log(err);

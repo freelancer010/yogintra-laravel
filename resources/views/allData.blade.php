@@ -172,15 +172,9 @@
             id
         };
         ajaxCallData(PANELURL + 'telecalling/deleteData', postData, 'POST')
-            .then(function(result) {
-                const jsonCheck = isJSON(result);
-                if (jsonCheck) {
-                    const resp = JSON.parse(result);
-                    notifyAlert(resp.success == 1 ? 'Deleted successfully!' : 'You are not authorized!', resp.success == 1 ? 'success' : 'danger');
-                    getData();
-                } else {
-                    notifyAlert('You are not authorized!', 'danger');
-                }
+            .then(function(resp) {
+                notifyAlert(resp.success == 1 ? 'Deleted successfully!' : 'You are not authorized!', resp.success == 1 ? 'success' : 'danger');
+                getData();
             })
             .catch(console.log);
     };

@@ -183,16 +183,10 @@
             'status':status
         }
         ajaxCallData(PANELURL + 'trainers/changeStatus',postData, 'POST')
-            .then(function (result) {
-                jsonCheck  = isJSON(result);
-                if(jsonCheck==true){
-                    resp = JSON.parse(result);
-                    if(resp.success==1){
-                        getData();
-                        notifyAlert(resp.message,'success');
-                    }else{
-                        notifyAlert('You are not authorized!','danger');
-                    }
+            .then(function (resp) {
+                if(resp.success==1){
+                    getData();
+                    notifyAlert(resp.message,'success');
                 }else{
                     notifyAlert('You are not authorized!','danger');
                 }
@@ -207,20 +201,13 @@
             'id': id,
         }
         ajaxCallData(PANELURL + 'trainers/delete', postData, 'POST')
-            .then(function (result) {
-                jsonCheck = isJSON(result);
-                if (jsonCheck == true) {
-                    resp = JSON.parse(result);
-                    if (resp.success == 1) {
-                        getData();
-                        notifyAlert('Deleted successfully!', 'success');
-                    } else {
-                        notifyAlert('You are not authorized!', 'danger');
-                    }
+            .then(function (resp) {
+                if (resp.success == 1) {
+                    getData();
+                    notifyAlert('Deleted successfully!', 'success');
                 } else {
                     notifyAlert('You are not authorized!', 'danger');
                 }
-
             })
             .catch(function (err) {
                 // console.log(err);
@@ -233,18 +220,12 @@
             'status':status
         }
         ajaxCallData(PANELURL + 'trainers/show_trainer',postData, 'POST')
-            .then(function (result) {
-                jsonCheck  = isJSON(result);
-                if(jsonCheck==true){
-                    resp = JSON.parse(result);
-                    if(resp.success==1){
-                        getData();
-                        notifyAlert(resp.message,'success');
-                    }else{
-                        notifyAlert('You are not authorized!','danger');
-                    }
+            .then(function (resp) {
+                if(resp.success==1){
+                    getData();
+                    notifyAlert(resp.message,'success');
                 }else{
-                    notifyAlert('You are not authorized to do this!','danger');
+                    notifyAlert('You are not authorized!','danger');
                 }
             })
             .catch(function (err) {
@@ -258,19 +239,12 @@
         }
         console.log(postData);
         ajaxCallData(PANELURL + 'trainers/is_featured_trainer',postData, 'POST')
-            .then(function (result) {
-                console.log(result);
-                jsonCheck  = isJSON(result);
-                if(jsonCheck==true){
-                    resp = JSON.parse(result);
-                    if(resp.success==1){
-                        getData();
-                        notifyAlert(resp.message,'success');
-                    }else{
-                        notifyAlert('You are not authorized!','danger');
-                    }
+            .then(function (resp) {
+                if(resp.success==1){
+                    getData();
+                    notifyAlert(resp.message,'success');
                 }else{
-                    notifyAlert('You are not authorized to do this!','danger');
+                    notifyAlert('You are not authorized!','danger');
                 }
             })
             .catch(function (err) {
