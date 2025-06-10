@@ -3,7 +3,7 @@
         <tr>
             <td class="">
                 <div>
-                    <img src="{{ asset('assets/logo.jpg') }}" alt="Company Logo" style="max-width: 100%;">
+                    <img src="{{ public_path('assets/logo.jpg') }}" alt="Company Logo" style="max-width: 100%;">
                 </div>
             </td>
             <td>
@@ -230,7 +230,7 @@
                 </table>
             </td>
             <td>
-                <img src="{{ asset('assets/payment-qr.jpg') }}" alt="Payment QR">
+                <img src="{{ public_path('assets/payment-qr.jpg') }}" alt="Payment QR">
             </td>
         </tr>
     </tbody>
