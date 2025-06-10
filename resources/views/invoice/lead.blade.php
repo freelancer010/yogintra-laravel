@@ -3,7 +3,7 @@
         <tr>
             <td class="">
                 <div>
-                    <img src="{{ asset('assets/logo.jpg') }}" alt="Company Logo" style="max-width: 100%;">
+                    <img src="{{ asset('assets/img/logo.jpg') }}" alt="Company Logo" style="max-width: 100%;">
                 </div>
             </td>
             <td>
