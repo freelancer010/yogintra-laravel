@@ -3,7 +3,7 @@
         <tr>
             <td class="">
                 <div>
-                    <img src="{{ public_path('assets/logo.jpg') }}" alt="Company Logo" style="max-width: 100%;">
+                    <img src="{{ asset('assets/img/logo.jpg') }}" alt="Company Logo" style="max-width: 100%;">
                 </div>
             </td>
             <td>
@@ -207,7 +207,7 @@
                         </tr>
                         <tr>
                             <td>
-                                Branch name:-
+                                Branch:-
                             </td>
                             <td>
                                 DOMBIVALI-EAST
@@ -226,7 +226,7 @@
                 </table>
             </td>
             <td>
-                <img src="{{ public_path('assets/payment-qr.jpg') }}" alt="Payment QR">
+                <img src="{{ asset('assets/payment-qr.jpg') }}" alt="Payment QR">
             </td>
         </tr>
     </tbody>
