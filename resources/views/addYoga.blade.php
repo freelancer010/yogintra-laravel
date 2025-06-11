@@ -46,21 +46,15 @@
                                     <!-- Location -->
                                     <div class="form-group col-lg-6 col-sm-12">
                                         <label>Country</label>
-                                        <select class="form-control countries" name="country">
-                                            <option value="" selected>Select your Country</option>
-                                        </select>
+                                        <input required type="text" class="form-control" name="country" placeholder="Enter country">
                                     </div>
                                     <div class="form-group col-lg-6 col-sm-12">
                                         <label>State</label>
-                                        <select class="form-control states" name="state">
-                                            <option value="" selected>Select your State</option>
-                                        </select>
+                                        <input required type="text" class="form-control" name="state" placeholder="Enter state">
                                     </div>
                                     <div class="form-group col-lg-6 col-sm-12">
                                         <label>City</label>
-                                        <select class="form-control cities" name="city">
-                                            <option value="" selected>Select your City</option>
-                                        </select>
+                                        <input required type="text" class="form-control" name="city" placeholder="Enter city">
                                     </div>
 
                                     <input type="hidden" name="class_type" value="Yoga Center">
