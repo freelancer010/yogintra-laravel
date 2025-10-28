@@ -37,6 +37,11 @@ Route::middleware([SessionMiddleware::class])->group(function () {
     Route::post('/get-cities', [CommonController::class, 'getCities']);
 });
 
+// Offline fallback used by service worker
+Route::get('/offline', function () {
+    return view('offline');
+})->name('offline');
+
 Route::middleware([OperationMiddleware::class])->group(function () {
 
     // All Data

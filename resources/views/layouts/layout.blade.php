@@ -41,6 +41,11 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <!-- PWA: web manifest and theme -->
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon" href="{{ asset('assets/img/logo.png') }}">
+
     @stack('styles')
 </head>
 
@@ -72,6 +77,25 @@
             <!-- Control sidebar content goes here -->
         </aside>
     </div>
+
+    <!-- PWA install button (will be shown when browser fires beforeinstallprompt) -->
+    <style>
+        #pwa-install-btn {
+            position: fixed;
+            right: 16px;
+            bottom: 90px;
+            z-index: 1050;
+            display: none;
+            border: none;
+            background: #0d6efd;
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(13,110,253,0.2);
+            cursor: pointer;
+        }
+    </style>
+    <button id="pwa-install-btn" aria-hidden="true">Install app</button>
 
     <!-- Scripts -->
     <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
@@ -110,6 +134,54 @@
     <script src="{{ asset('assets/js/custom.js') }}"></script>
 
     @yield('scripts')
+    <script>
+        // Register service worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('{{ asset('service-worker.js') }}')
+                    .then(function (registration) {
+                        console.log('ServiceWorker registered with scope:', registration.scope);
+                        if (registration.waiting) console.log('ServiceWorker waiting');
+                        if (registration.installing) console.log('ServiceWorker installing');
+                        if (registration.active) console.log('ServiceWorker active');
+                    })
+                    .catch(function (err) {
+                        console.error('ServiceWorker registration failed:', err);
+                    });
+            });
+        }
+        
+        // beforeinstallprompt handling for a custom install button
+        (function () {
+            let deferredPrompt;
+            const installBtn = document.getElementById('pwa-install-btn');
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                // Prevent the mini-infobar from appearing on mobile
+                e.preventDefault();
+                deferredPrompt = e;
+                // Show the install button
+                installBtn.style.display = 'block';
+                installBtn.setAttribute('aria-hidden', 'false');
+            });
+
+            installBtn.addEventListener('click', async () => {
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                const choiceResult = await deferredPrompt.userChoice;
+                // Hide the install button after user choice
+                installBtn.style.display = 'none';
+                deferredPrompt = null;
+                console.log('User install choice:', choiceResult.outcome);
+            });
+
+            // Optionally hide the button on appinstalled
+            window.addEventListener('appinstalled', () => {
+                installBtn.style.display = 'none';
+                console.log('PWA installed');
+            });
+        })();
+    </script>
 </body>
 
 </html>
