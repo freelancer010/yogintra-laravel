@@ -462,7 +462,7 @@ class LeadController extends Controller
     {
         $id = $request->post('id');
 
-        $resp = DB::table('leads')->where('id', $id)->update(['status' => 1]);
+        $resp = DB::table('leads')->where('id', $id)->update(['status' => 1, 'created_by' => '']);
 
         if ($resp) {
             return response()->json([
