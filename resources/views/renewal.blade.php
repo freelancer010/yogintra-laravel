@@ -129,10 +129,10 @@
 
     let getData = (startDate = '', endDate = '') => {
         var apiUrl = PANELURL + 'renewal/view';
-        ajaxCallData(apiUrl, {
+            ajaxCallData(apiUrl, {
                 startDate: startDate,
                 endDate: endDate,
-                type: "<?= $_GET['type'] ?>"
+                type: "{{ request('type') }}"
             }, 'POST')
             .then(function(resp) {
                 if (resp.success == 1) {
