@@ -154,8 +154,8 @@
                                     </div>
                                     <div class="form-group col-lg-6 col-sm-12">
                                         <label for="clientEducation">Education</label>
-                                        <input required type="text" class="form-control editInputBox" id="clientEducation"
-                                            name="education" placeholder="Enter Education">
+                                        <textarea required class="form-control editInputBox" id="clientEducation"
+                                            name="education" placeholder="Enter Education" rows="3"></textarea>
                                     </div>
                                     <div class="form-group col-lg-6 col-sm-12">
                                         <label for="clienExperience">Experience</label>
