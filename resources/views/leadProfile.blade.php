@@ -347,7 +347,7 @@
                                 <button title="renew this row" onclick='renewData(${JSON.stringify(this)},${resp.full_payment})' class="btn btn-warning btn-xs">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <a target ="_blank" href="invoice?id=${resp.id}&renew_amount=${this.renew_amount}" title="download invoice" class="btn btn-secondary btn-xs mr5 text-white">
+                                <a target ="_blank" href="/invoice?id=${resp.id}&renew_amount=${this.renew_amount}" title="download invoice" class="btn btn-secondary btn-xs mr5 text-white">
                                     <i class="fa fa-download"></i>
                                 </a>
                             </div>
