@@ -95,6 +95,7 @@ Route::middleware([OperationMiddleware::class])->group(function () {
     Route::get('/renewal', [RenewalController::class, 'index'])->name('customer.renewal');
     Route::post('/renewal/view', [RenewalController::class, 'getRenewal']);
     Route::post('/renewal/edit', [RenewalController::class, 'editRenewal']);
+    Route::post('/renewal/editRenewal', [RenewalController::class, 'editRenewal']);
     Route::post('/renewal/delete', [RenewalController::class, 'deleteData']);
     Route::post('/renewal/skipRenew', [RenewalController::class, 'skipRenew']);
     Route::post('/renewal/moveToRenew', [RenewalController::class, 'moveToRenew']);
