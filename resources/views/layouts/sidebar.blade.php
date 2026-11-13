@@ -1,23 +1,13 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color: #ffffff!important; color:red">
+<aside class="main-sidebar sidebar-light-primary" aria-label="Main navigation">
+    <a href="{{ route('dashboard') }}" class="brand-link workspace-brand"><img src="{{ asset('assets/img/logo.png') }}" alt="YogIntra"><span>TEAM WORKSPACE</span></a>
     <div class="sidebar">
-        <!-- User Panel -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            <div class="image">
-                <img src="{{ session('profile_image') ? asset(session('profile_image')) : asset('assets/dist/img/default-profile.png') }}"
-                    class="img-circle elevation-2" alt="User Image">
-            </div>
-            <div class="info">
-                <a href="#" class="d-block">{{ session('fullName') }}</a>
-            </div>
-        </div>
-
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
                 <li class="nav-item">
                     <a href="{{ route('dashboard') }}"
-                        class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}">
+                        class="nav-link {{ request()->is('/', 'dashboard') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>Dashboard</p>
                     </a>

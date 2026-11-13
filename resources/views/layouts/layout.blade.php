@@ -47,16 +47,12 @@
     <link rel="apple-touch-icon" href="{{ asset('assets/img/logo.png') }}">
 
     @stack('styles')
+    <link rel="stylesheet" href="{{ asset('assets/css/modern.css') }}?v=3">
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed yogintra-app">
     <div id="toastsContainerTopRight" class="toasts-top-right fixed"></div>
     <div class="wrapper">
-        <!-- Preloader -->
-        <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="{{ asset('assets/img/logo.png') }}" alt="AdminLTELogo" width="20%">
-        </div>
-
         <!-- Navbar -->
         @include('layouts/navbar')
 
@@ -64,12 +60,11 @@
         @include('layouts/sidebar')
 
         <!-- Content Wrapper. Contains page content -->
-        @yield('content')
+        <main id="main-content">@yield('content')</main>
 
         <!-- Footer -->
         <footer class="main-footer">
-            <strong>Copyright &copy; 2023-2030 <a href="#">YogIntra</a>.</strong>
-            All rights reserved.
+            <span>&copy; {{ date('Y') }} YogIntra. All rights reserved.</span><span class="float-right d-none d-sm-inline">Mindful practice. Meaningful connections.</span>
         </footer>
 
         <!-- Control Sidebar -->
@@ -133,6 +128,7 @@
     <!-- Custom Scripts -->
     <script src="{{ asset('assets/js/custom.js') }}"></script>
 
+    <script src="{{ asset('assets/js/modern.js') }}?v=2"></script>
     @yield('scripts')
     <script>
         // Register service worker for PWA functionality

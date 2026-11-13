@@ -170,37 +170,30 @@ class DashboardController extends Controller
         GROUP BY class_type)
     ");
 
-		if (count($creditDebitSummary)) {
-			$totalCredit = array_sum(array_column($creditDebitSummary, 'full_payment'));
-			$totalDebit = array_sum(array_column($creditDebitSummary, 'payTotrainer'));
+		$totalCredit = array_sum(array_column($creditDebitSummary, 'full_payment'));
+		$totalDebit = array_sum(array_column($creditDebitSummary, 'payTotrainer'));
 
-			$result = [
-				'lead' => $leads->count(),
-				'unreadLeads' => $unreadLeads->count(),
+		$result = [
+			'lead' => $leads->count(),
+			'unreadLeads' => $unreadLeads->count(),
 
-				'customer' => $customer->count(),
-				'telecaller' => $telecaller->count(),
+			'customer' => $customer->count(),
+			'telecaller' => $telecaller->count(),
 
-				'recruits' => $recruits->count(),
-				'unreadRecruits' => $unreadRecruits->count(),
+			'recruits' => $recruits->count(),
+			'unreadRecruits' => $unreadRecruits->count(),
 
-				'trainer' => $trainer->count(),
-				'unreadTrainer' => $unreadTrainer->count(),
+			'trainer' => $trainer->count(),
+			'unreadTrainer' => $unreadTrainer->count(),
 
-				'rejected' => $rejected->count(),
+			'rejected' => $rejected->count(),
 
-				'yoga' => $yoga->count(),
-				'events' => $events->count(),
+			'yoga' => $yoga->count(),
+			'events' => $events->count(),
 
-				'totalCredit' => $totalCredit,
-				'totalDebit' => $totalDebit,
-			];
-		} else {
-			$result = [
-				'success' => 0,
-				'message' => 'No data found!'
-			];
-		}
+			'totalCredit' => $totalCredit,
+			'totalDebit' => $totalDebit,
+		];
 
 		return response()->json($result);
 	}

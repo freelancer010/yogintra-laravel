@@ -1,5 +1,6 @@
 @extends('layouts.layout')
 
+@section('title', 'Dashboard')
 @section('content')
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -22,17 +23,19 @@
   <!-- Main content -->
   <section class="content">
     <div class="container-fluid">
+      <div class="dashboard-intro"><div><div class="eyebrow">YOUR DAILY OVERVIEW</div><h2>Welcome back{{ session('fullName') ? ', ' . explode(' ', trim(session('fullName')))[0] : '' }}.</h2><p>Your community, connections, and progress in one place.</p></div><div class="intro-mark" aria-hidden="true">y</div></div>
+      <div id="dashboard-status" class="dashboard-status" role="status" aria-live="polite">Loading your overview...</div>
       <div class="row justify-content-center">
 
         @if(session('admin_role_id') == 13)
         <div class="col-lg-4 col-6">
           <div class="small-box bg-info">
             <div class="inner">
-              <h3 id="yoga"></h3>
-              <p id="y"></p>
+              <h3 data-dashboard-count id="yoga">&mdash;</h3>
+              <p>Yoga bookings</p>
             </div>
-            <div class="icon"><i class="ion ion-stats-bars"></i></div>
-            <a href="{{ url('yoga-bookings') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            <div class="icon"><i class="fas fa-chart-line"></i></div>
+            <a href="{{ url('yoga-bookings') }}" class="small-box-footer">View details <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
         @else
@@ -41,88 +44,88 @@
         <div class="col-lg-4 col-6">
           <div class="small-box bg-secondary">
             <div class="inner">
-              <h3 id="leads"></h3>
+              <h3 data-dashboard-count id="leads">&mdash;</h3>
               <p>Leads</p>
             </div>
-            <div class="icon"><i class="ion ion-bag"></i></div>
-            <a href="{{ url('lead') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            <div class="icon"><i class="fas fa-clipboard-list"></i></div>
+            <a href="{{ url('lead') }}" class="small-box-footer">View details <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
 
         <div class="col-lg-4 col-6">
           <div class="small-box bg-warning">
             <div class="inner">
-              <h3 id="telecaller"></h3>
-              <p>Telecallers</p>
+              <h3 data-dashboard-count id="telecaller">&mdash;</h3>
+              <p>Telecalling records</p>
             </div>
-            <div class="icon"><i class="ion ion-pie-graph"></i></div>
-            <a href="{{ url('telecalling') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            <div class="icon"><i class="fas fa-headset"></i></div>
+            <a href="{{ url('telecalling') }}" class="small-box-footer">View details <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
 
         <div class="col-lg-4 col-6">
           <div class="small-box bg-success">
             <div class="inner">
-              <h3 id="customer"></h3>
+              <h3 data-dashboard-count id="customer">&mdash;</h3>
               <p>Customers</p>
             </div>
-            <div class="icon"><i class="ion ion-person-add"></i></div>
-            <a href="{{ url('customer') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            <div class="icon"><i class="fas fa-users"></i></div>
+            <a href="{{ url('customer') }}" class="small-box-footer">View details <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
 
         <div class="col-lg-4 col-6">
           <div class="small-box bg-primary">
             <div class="inner">
-              <h3 id="trainer"></h3>
-              <p id="unreadTrainer"></p>
+              <h3 data-dashboard-count id="trainer">&mdash;</h3>
+              <p>Trainers</p><small id="unreadTrainer" class="metric-note"></small>
             </div>
-            <div class="icon"><i class="ion ion-stats-bars"></i></div>
-            <a href="{{ url('trainers') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            <div class="icon"><i class="fas fa-chart-line"></i></div>
+            <a href="{{ url('trainers') }}" class="small-box-footer">View details <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
 
         <div class="col-lg-4 col-6">
           <div class="small-box bg-danger">
             <div class="inner">
-              <h3 id="events"></h3>
-              <p id="e"></p>
+              <h3 data-dashboard-count id="events">&mdash;</h3>
+              <p>Events</p>
             </div>
-            <div class="icon"><i class="ion ion-calendar"></i></div>
-            <a href="{{ url('event') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            <div class="icon"><i class="fas fa-calendar-alt"></i></div>
+            <a href="{{ url('event') }}" class="small-box-footer">View details <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
 
         <div class="col-lg-4 col-6">
           <div class="small-box bg-info">
             <div class="inner">
-              <h3 id="yoga"></h3>
-              <p id="y"></p>
+              <h3 data-dashboard-count id="yoga">&mdash;</h3>
+              <p>Yoga bookings</p>
             </div>
-            <div class="icon"><i class="ion ion-stats-bars"></i></div>
-            <a href="{{ url('yoga-bookings') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            <div class="icon"><i class="fas fa-chart-line"></i></div>
+            <a href="{{ url('yoga-bookings') }}" class="small-box-footer">View details <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
         @else
         <div class="col-lg-4 col-6">
           <div class="small-box bg-warning">
             <div class="inner">
-              <h3 id="recruits"></h3>
-              <p id="unreadRecruits"></p>
+              <h3 data-dashboard-count id="recruits">&mdash;</h3>
+              <p>Recruits</p><small id="unreadRecruits" class="metric-note"></small>
             </div>
-            <div class="icon"><i class="ion ion-person-add"></i></div>
-            <a href="{{ url('recruiter') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            <div class="icon"><i class="fas fa-users"></i></div>
+            <a href="{{ url('recruiter') }}" class="small-box-footer">View details <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
 
         <div class="col-lg-4 col-6">
           <div class="small-box bg-success">
             <div class="inner">
-              <h3 id="trainer"></h3>
-              <p id="unreadTrainer"></p>
+              <h3 data-dashboard-count id="trainer">&mdash;</h3>
+              <p>Trainers</p><small id="unreadTrainer" class="metric-note"></small>
             </div>
-            <div class="icon"><i class="ion ion-stats-bars"></i></div>
-            <a href="{{ url('trainers') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            <div class="icon"><i class="fas fa-chart-line"></i></div>
+            <a href="{{ url('trainers') }}" class="small-box-footer">View details <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
         @endif
@@ -132,10 +135,13 @@
         <div class="col-lg-6">
           <div class="card card-info">
             <div class="card-header">
-              <h3 class="card-title">All Data Chart</h3>
+              <h3 class="card-title">Community overview</h3><span class="chart-period">All time &middot; current record statuses</span>
             </div>
             <div class="card-body">
-              <canvas id="allChart" style="height: 250px; max-width: 100%;"></canvas>
+              <div class="chart-summary">
+                <div class="compact-chart"><canvas id="allChart" role="img" aria-label="Distribution of leads, telecalling records, customers, and rejected records"></canvas><p class="chart-empty" id="community-empty" hidden>No records yet</p></div>
+                <dl class="chart-breakdown" id="community-breakdown"><div><dt>Records</dt><dd>&mdash;</dd></div></dl>
+              </div><p class="chart-footnote">Current status distribution, not a historical conversion rate.</p>
             </div>
           </div>
         </div>
@@ -145,10 +151,13 @@
         <div class="col-lg-6">
           <div class="card card-info">
             <div class="card-header">
-              <h3 class="card-title">Accounts Chart</h3>
+              <h3 class="card-title">Financial overview</h3><span class="chart-period">All time &middot; recorded amounts</span>
             </div>
             <div class="card-body">
-              <canvas id="myChart" style="height: 250px; max-width: 100%;"></canvas>
+              <div class="chart-summary">
+                <div class="compact-chart"><canvas id="myChart" role="img" aria-label="Comparison of recorded credit and debit amounts"></canvas><p class="chart-empty" id="finance-empty" hidden>No amounts yet</p></div>
+                <dl class="chart-breakdown" id="finance-breakdown"><div><dt>Amounts</dt><dd>&mdash;</dd></div></dl>
+              </div><p class="chart-footnote">Customer and event credits; trainer payments and office expenses. Net balance = credit minus debit.</p>
             </div>
           </div>
         </div>
@@ -161,58 +170,5 @@
 @endsection
 
 @section('scripts')
-<script>
-  var allDataCounts = '';
-
-  const ctx = document.getElementById('myChart');
-  const atx = document.getElementById('allChart');
-
-  fetch("{{ url('counts') }}")
-    .then(res => res.json())
-    .then(resp => {
-      $('#leads').text(resp.lead);
-      $('#unreadLeads').text('Leads (' + resp.unreadLeads + ' Unread)');
-      $('#trainer').text(resp.trainer);
-      $('#unreadTrainer').text('Trainers');
-      $('#recruits').text(resp.recruits);
-      $('#unreadRecruits').text('Recruits (' + resp.unreadRecruits + ' Unread)');
-      $('#customer').text(resp.customer);
-      $('#telecaller').text(resp.telecaller);
-      $('#events').text(resp.events);
-      $('#e').text('Events');
-      $('#yoga').text(resp.yoga);
-      $('#y').text('Yoga Centers');
-
-      new Chart(atx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Leads', 'Telecallers', 'Customers', 'Rejected'],
-          datasets: [{
-            data: [resp.lead, resp.telecaller, resp.customer, resp.rejected],
-            backgroundColor: ["#6c757d", "#ffc107", "#28a745", "#dc3545"],
-            borderWidth: 1
-          }]
-        }
-      });
-
-      new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: ['Credit Amount', 'Debit Amount', 'Net Profit'],
-          datasets: [{
-            data: [resp.totalCredit, resp.totalDebit, (resp.totalCredit - resp.totalDebit)],
-            backgroundColor: ["#ffc107", "#dc3545", "#28a745"],
-            borderWidth: 1
-          }]
-        }
-      });
-    });
-
-  // setTimeout(() => {
-  //   let leadsCount = $('#leads').text();
-  //   if (leadsCount === '') {
-  //     window.location = "{{ url('logout') }}";
-  //   }
-  // }, 1500);
-</script>
+<script src="{{ asset('assets/js/dashboard.js') }}?v=2" data-counts-url="{{ url('counts') }}" defer></script>
 @endsection
