@@ -1,4 +1,0 @@
-<FilesMatch "\.(php|php5|phtml|phar)$">
-    Order Allow,Deny
-    Deny from all
-</FilesMatch>
