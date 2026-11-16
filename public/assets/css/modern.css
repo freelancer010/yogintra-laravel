@@ -549,9 +549,15 @@ body.yogintra-login {
     .workspace-heading strong { font-size: 13px; }
     .yogintra-app .small-box .inner { min-height: 135px; }
 }
-.yogintra-app .sidebar { overflow-x: hidden; }
+.yogintra-app .main-sidebar { overflow-x: hidden !important; }
+.yogintra-app .sidebar { overflow-x: hidden !important; max-width: 100%; box-sizing: border-box; }
 .yogintra-app .nav-sidebar { width: 100%; }
+.yogintra-app .sidebar nav,
+.yogintra-app .sidebar .nav-sidebar,
+.yogintra-app .sidebar .nav-treeview { min-width: 0; max-width: 100%; box-sizing: border-box; }
 .yogintra-app .sidebar .os-viewport { overflow-x: hidden !important; }
 .yogintra-app .sidebar .os-scrollbar-horizontal { display: none !important; }
 .yogintra-app .nav-sidebar .nav-item,
 .yogintra-app .nav-sidebar .nav-treeview { max-width: 100%; min-width: 0; }
+
+.navbar-user-trigger { display: flex; align-items: center; gap: 10px; border: 0; padding: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; }

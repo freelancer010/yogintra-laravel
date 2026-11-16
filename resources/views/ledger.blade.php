@@ -46,8 +46,9 @@
                             </div>
                         </div>
                         <div class="card-body">
+                            <p id="financial-note" class="text-muted" role="status">Date filters use payment dates. Receipts and debits are separate entries.</p>
                             <select id="class_type" name="class" class="form-control editInputBox col-lg-4 m-auto">
-                                <option value='' selected>Select Your Class type</option>
+                                <option value="all" selected>All categories</option><option value="Expense">Office expenses</option><option value="Uncategorized">Uncategorized</option>
 
                                 <option value="Home Visit Yoga">Home Visit Yoga</option>
                                 <option value="Private Online Yoga">Private Online Yoga</option>
@@ -62,13 +63,15 @@
                                 <thead>
                                     <tr>
                                         <th>Client Name</th>
-                                        <th>Income</th>
+                                        <th>Recorded credit</th>
                                         <th style="width:180px !important;">Date</th>
                                         <th>Trainer Name</th>
-                                        <th>Expenses</th>
+                                        <th>Recorded debit</th>
                                         <th style="width:180px !important;">Date</th>
+                                        <th>Payment note</th>
                                     </tr>
                                 </thead>
+                                <tfoot><tr><th>Total</th><th id="totalCredit">0.00</th><th></th><th></th><th id="totalDebit">0.00</th><th></th><th></th></tr></tfoot>
                             </table>
                         </div>
                     </div>
@@ -87,12 +90,21 @@
         }
     });
 
+
+    const amountRenderer = (value, type) => type === 'display' || type === 'filter' ? Number(value || 0).toFixed(2) : Number(value || 0);
+    const financialNote = (resp, start, end) => {
+        const base = 'Recorded customer, event and yoga receipts; trainer payments and office expenses. Deleted/voided and transferred lead records are excluded.';
+        return resp.undatedCount > 0
+            ? base + ` ${resp.undatedCount} entries have no reliable payment date (credit INR ${Number(resp.undatedCredit).toFixed(2)}, debit INR ${Number(resp.undatedDebit).toFixed(2)}). ` + (start || end ? 'They are excluded from this date range.' : 'They are included in all-time totals.')
+            : base + ' Date filters use payment dates.';
+    };
+
     const PANELURL = "{{ url('/') }}/";
 
     let filter = () => {
         let toDate = $("#toDate").val();
         let fromDate = $("#fromDate").val();
-        getData('all', fromDate, toDate);
+        getData($('#class_type').val() || 'all', fromDate, toDate);
     }
 
     let reset = () => {
@@ -109,32 +121,36 @@
                 endDate: endDate
             }, 'POST')
             .then(function(resp) {
+                $("#totalCredit").text(Number(resp.totalCredit || 0).toFixed(2));
+                $("#totalDebit").text(Number(resp.totalDebit || 0).toFixed(2));
+                $("#financial-note").text(financialNote(resp, startDate, endDate));
                 if (resp.success == 1) {
                     response = resp.data;
                     let cols = [{
                             data: "name"
                         },
                         {
-                            data: "full_payment"
+                            data: "full_payment", render: amountRenderer
                         },
                         {
                             data: null,
                             render: function(data, type, row) {
-                                return (row.created_date != '' && row.created_date != undefined) ? row.created_date.slice(0, 10) : '';
+                                return row.full_payment == 0 ? '' : (row.created_date ? row.created_date.slice(0, 10) : 'Undated');
                             }
                         },
                         {
                             data: "trainerName"
                         },
                         {
-                            data: "payTotrainer"
+                            data: "payTotrainer", render: amountRenderer
                         },
                         {
                             data: null,
                             render: function(data, type, row) {
-                                return (row.trainerPayDate != '' && row.trainerPayDate != undefined) ? row.trainerPayDate.slice(0, 10) : '';
+                                return row.payTotrainer == 0 ? '' : (row.trainerPayDate ? row.trainerPayDate.slice(0, 10) : 'Undated');
                             }
-                        }
+                        },
+                        { data: "note" }
                     ]
                     createDataTable("example1", response, cols, 2);
                 } else {
@@ -147,8 +163,8 @@
     };
     getData();
 
-    $('select').on('change', function() {
-        getData(this.value);
+    $('#class_type').on('change', function() {
+        getData(this.value, $('#fromDate').val(), $('#toDate').val());
     });
 </script>
 @endsection

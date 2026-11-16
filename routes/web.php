@@ -28,6 +28,8 @@ Route::get('/access_denied/index/{back?}', function ($back = null) {
 Route::get('/cron/update-renew-data', [CronController::class, 'updateRenewData']);
 
 Route::middleware([SessionMiddleware::class])->group(function () {
+    Route::get('/account/password', [AuthController::class, 'showChangePasswordForm'])->name('account.password');
+    Route::post('/account/password', [AuthController::class, 'changePassword'])->middleware('throttle:5,1')->name('account.password.update');
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/counts', [DashboardController::class, 'counts'])->name('dashboard.counts');

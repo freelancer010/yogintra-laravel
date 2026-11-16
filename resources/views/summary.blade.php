@@ -46,13 +46,14 @@
                             </div>
                         </div>
                         <div class="card-body">
+                            <p id="financial-note" class="text-muted" role="status">Recorded receipts and payments. Date filters use payment dates.</p>
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th style="width:250px !important">Particular Class Name</th>
                                         <th style="text-align:center">Credit Amount</th>
                                         <th style="text-align:center">Debit Amount</th>
-                                        <th style="text-align:center">Profit Amount</th>
+                                        <th style="text-align:center">Net Balance</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
@@ -60,7 +61,7 @@
                                         <th style="text-align:center">TOTAL</th>
                                         <th style="text-align:center" id="totalCredit">Credit Amount</th>
                                         <th style="text-align:center" id="totalDebit">Debit Amount</th>
-                                        <th style="text-align:center" id="totalProfit">Profit Amount</th>
+                                        <th style="text-align:center" id="totalProfit">Net Balance</th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -80,6 +81,15 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
+
+    const amountRenderer = (value, type) => type === 'display' || type === 'filter' ? Number(value || 0).toFixed(2) : Number(value || 0);
+    const financialNote = (resp, start, end) => {
+        const base = 'Recorded customer, event and yoga receipts; trainer payments and office expenses. Deleted/voided and transferred lead records are excluded.';
+        return resp.undatedCount > 0
+            ? base + ` ${resp.undatedCount} entries have no reliable payment date (credit INR ${Number(resp.undatedCredit).toFixed(2)}, debit INR ${Number(resp.undatedDebit).toFixed(2)}). ` + (start || end ? 'They are excluded from this date range.' : 'They are included in all-time totals.')
+            : base + ' Date filters use payment dates.';
+    };
 
     const PANELURL = "{{ url('/') }}/";
     let filter = () => {
@@ -102,29 +112,30 @@
                 endDate: endDate
             }, 'POST')
             .then(function(resp) {
+                $("#totalCredit").text(Number(resp.totalCredit || 0).toFixed(2));
+                $("#totalDebit").text(Number(resp.totalDebit || 0).toFixed(2));
+                $("#totalProfit").text(Number(resp.netAmount || 0).toFixed(2));
+                $("#financial-note").text(financialNote(resp, startDate, endDate));
                 if (resp.success == 1) {
                     response = resp.data;
                     let cols = [{
                             data: "class_type"
                         },
                         {
-                            data: "full_payment"
+                            data: "full_payment", render: amountRenderer
                         },
                         {
-                            data: "payTotrainer"
+                            data: "payTotrainer", render: amountRenderer
                         },
                         {
                             data: null,
                             render: function(data, type, row) {
-                                var profit = parseInt(row.full_payment - row.payTotrainer)
-                                return `${profit > 0 ? profit : 0}`;
+                                return amountRenderer(row.net_amount, type);
                             }
                         }
                     ]
                     createDataTable("example1", response, cols);
-                    $("#totalCredit").text(resp.totalCredit);
-                    $("#totalDebit").text(resp.totalDebit);
-                    $("#totalProfit").text(parseInt(resp.totalCredit - resp.totalDebit));
+
                 } else {
                     createDataTable("example1", '', '');
                 }

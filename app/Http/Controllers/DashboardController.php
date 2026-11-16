@@ -154,24 +154,9 @@ class DashboardController extends Controller
 		}
 		$telecaller = $telecallerQuery->orderBy('id', 'desc')->get();
 
-		// UNION QUERY FOR FINANCIAL SUMMARY
-		$creditDebitSummary = DB::select("
-        (SELECT class_type, SUM(full_payment) AS full_payment, SUM(payTotrainer) AS payTotrainer 
-        FROM leads 
-        WHERE status = 3 AND class_type != '' 
-        GROUP BY class_type)
-        UNION ALL 
-        (SELECT 'Expense' AS class_type, 0 AS full_payment, SUM(expenseAmount) AS payTotrainer 
-        FROM expense)
-        UNION ALL 
-        (SELECT class_type, SUM(totalPayAmount) AS full_payment, 0 AS payTotrainer 
-        FROM events 
-        WHERE class_type != '' 
-        GROUP BY class_type)
-    ");
-
-		$totalCredit = array_sum(array_column($creditDebitSummary, 'full_payment'));
-		$totalDebit = array_sum(array_column($creditDebitSummary, 'payTotrainer'));
+		$financial = app(\App\Services\FinancialReport::class)->build();
+		$totalCredit = $financial['totalCredit'];
+		$totalDebit = $financial['totalDebit'];
 
 		$result = [
 			'lead' => $leads->count(),
@@ -193,6 +178,7 @@ class DashboardController extends Controller
 
 			'totalCredit' => $totalCredit,
 			'totalDebit' => $totalDebit,
+			'undatedCount' => $financial['undatedCount'],
 		];
 
 		return response()->json($result);

@@ -3,7 +3,7 @@
     const source = document.currentScript;
     const status = document.getElementById('dashboard-status');
     const number = new Intl.NumberFormat('en-IN');
-    const money = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 });
+    const money = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2, maximumFractionDigits: 2 });
     const numeric = value => Number.isFinite(Number(value)) ? Number(value) : 0;
     const text = (id, value) => { const element = document.getElementById(id); if (element) element.textContent = value; };
     const row = (container, label, value, color, detail, total = false) => {

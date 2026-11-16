@@ -47,7 +47,7 @@
     <link rel="apple-touch-icon" href="{{ asset('assets/img/logo.png') }}">
 
     @stack('styles')
-    <link rel="stylesheet" href="{{ asset('assets/css/modern.css') }}?v=3">
+    <link rel="stylesheet" href="{{ asset('assets/css/modern.css') }}?v={{ filemtime(public_path('assets/css/modern.css')) }}">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed yogintra-app">
@@ -128,7 +128,7 @@
     <!-- Custom Scripts -->
     <script src="{{ asset('assets/js/custom.js') }}"></script>
 
-    <script src="{{ asset('assets/js/modern.js') }}?v=2"></script>
+    <script src="{{ asset('assets/js/modern.js') }}?v={{ filemtime(public_path('assets/js/modern.js')) }}"></script>
     @yield('scripts')
     <script>
         // Register service worker for PWA functionality

@@ -24,9 +24,9 @@ async function run(data, {fail = false, charts = true, chartLibrary = true} = {}
     assert.equal(result.chartCalls.length, 2);
     assert.equal(result.chartCalls[1].data.datasets[0].data.length, 2);
     assert.equal(result.chartCalls[0].options.maintainAspectRatio, false);
-    assert.equal(result.elements['finance-breakdown'].children[2].children[1].textContent, '\u20b92,47,000');
+    assert.equal(result.elements['finance-breakdown'].children[2].children[1].textContent, '\u20b92,47,000.00');
     result = await run({...base,totalDebit:500000});
-    assert.equal(result.elements['finance-breakdown'].children[2].children[1].textContent, '-\u20b975,000');
+    assert.equal(result.elements['finance-breakdown'].children[2].children[1].textContent, '-\u20b975,000.00');
     assert.ok(result.chartCalls[1].data.datasets[0].data.every(amount => amount >= 0));
     result = await run({lead:0,totalCredit:0,totalDebit:0});
     assert.equal(result.chartCalls.length, 0);

@@ -157,7 +157,7 @@
               <div class="chart-summary">
                 <div class="compact-chart"><canvas id="myChart" role="img" aria-label="Comparison of recorded credit and debit amounts"></canvas><p class="chart-empty" id="finance-empty" hidden>No amounts yet</p></div>
                 <dl class="chart-breakdown" id="finance-breakdown"><div><dt>Amounts</dt><dd>&mdash;</dd></div></dl>
-              </div><p class="chart-footnote">Customer and event credits; trainer payments and office expenses. Net balance = credit minus debit.</p>
+              </div><p class="chart-footnote">All-time customer, event and yoga receipts; recorded trainer payments and office expenses. Includes undated amounts. Excludes deleted/voided records and transferred lead records. Net balance = credit minus debit.</p>
             </div>
           </div>
         </div>
@@ -170,5 +170,5 @@
 @endsection
 
 @section('scripts')
-<script src="{{ asset('assets/js/dashboard.js') }}?v=2" data-counts-url="{{ url('counts') }}" defer></script>
+<script src="{{ asset('assets/js/dashboard.js') }}?v=3" data-counts-url="{{ url('counts') }}" defer></script>
 @endsection

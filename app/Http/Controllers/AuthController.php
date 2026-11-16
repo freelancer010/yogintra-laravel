@@ -56,4 +56,40 @@ class AuthController extends Controller
         Session::flush();
         return redirect()->route('login');
     }
+
+    private function currentSuperAdmin()
+    {
+        abort_unless(session('is_supper') && session('admin_id'), 403);
+
+        $admin = DB::table('ci_admin')->where('admin_id', session('admin_id'))->first();
+        abort_unless($admin && $admin->is_supper == 1 && $admin->is_active == 1 && $admin->is_verify == 1, 403);
+
+        return $admin;
+    }
+
+    public function showChangePasswordForm()
+    {
+        $this->currentSuperAdmin();
+        return view('auth.change-password');
+    }
+
+    public function changePassword(Request $request)
+    {
+        $admin = $this->currentSuperAdmin();
+        $validated = $request->validate([
+            'current_password' => ['required', 'string', 'max:72'],
+            'password' => ['required', 'string', 'min:8', 'max:72', 'confirmed', 'different:current_password'],
+        ]);
+
+        if (!Hash::check($validated['current_password'], $admin->password)) {
+            return back()->withErrors(['current_password' => 'The current password is incorrect.']);
+        }
+
+        DB::table('ci_admin')->where('admin_id', $admin->admin_id)->update([
+            'password' => Hash::make($validated['password']),
+        ]);
+        $request->session()->regenerate();
+
+        return redirect()->route('account.password')->with('success', 'Your password has been changed successfully.');
+    }
 }
